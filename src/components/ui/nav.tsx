@@ -9,10 +9,12 @@ const navLinkClass = ({ isActive }: { isActive: boolean }): string => {
   }`;
 };
 
+const MIN_YEAR_WITH_DATA = 2023;
+
 const getYearOptions = (currentYear: number): number[] => {
   const years: number[] = [];
 
-  for (let year = currentYear + 1; year >= currentYear - 8; year -= 1) {
+  for (let year = currentYear; year >= MIN_YEAR_WITH_DATA; year -= 1) {
     years.push(year);
   }
 
