@@ -38,8 +38,11 @@ createRoot(rootElement).render(
       <Auth0Provider
         domain={AUTH0_DOMAIN}
         clientId={AUTH0_CLIENT_ID}
+        useRefreshTokens
+        cacheLocation="localstorage"
         authorizationParams={{
           audience: AUTH0_AUDIENCE,
+          scope: "openid profile email offline_access",
           redirect_uri: window.location.origin
         }}
       >
