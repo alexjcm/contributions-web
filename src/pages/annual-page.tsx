@@ -1,13 +1,9 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { 
-  CalendarDays, 
-  User, 
-  ChevronRight,
-  Info
-} from "lucide-react";
+import { CalendarDays, ChevronRight, Info } from "lucide-react";
 
 import { ContributionModal, type ContributionPayload } from "../components/contributions/contribution-modal";
+import { Card } from "../components/ui/card";
 import { SectionLoader } from "../components/ui/loaders";
 import { ContributionStateBadge, ContributorStatusBadge, getContributionCellState } from "../components/ui/state-badge";
 import { useAppContext } from "../context/app-context";
@@ -20,7 +16,6 @@ import { getMonthLabel } from "../lib/date";
 import { formatCentsAsCurrency } from "../lib/money";
 import { RESOURCE_KEYS } from "../lib/resource-invalidation";
 import type { Contribution, SummaryContributor } from "../types/domain";
-import { Card } from "../components/ui/card";
 
 type SelectedCell = {
   contributor: SummaryContributor;
@@ -136,7 +131,7 @@ export const AnnualPage = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <header>
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">
+        <div className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
           Matriz de Seguimiento
           <ChevronRight size={12} />
           {summary.data.year}
@@ -151,24 +146,78 @@ export const AnnualPage = () => {
           </div>
         </div>
       </header>
-      
-      <div className="lg:hidden p-4 rounded-xl border border-primary-100 bg-primary-50/50 flex items-start gap-3">
-         <Info size={18} className="text-primary-600 mt-0.5" />
-         <p className="text-xs font-medium text-primary-800 leading-relaxed">
-           Desliza horizontalmente la tabla para ver todos los meses. Puedes pulsar en cada celda para ver o editar el detalle.
-         </p>
+
+      <div className="rounded-xl border border-primary-100 bg-primary-50/50 p-4 md:hidden">
+        <div className="flex items-start gap-3">
+          <Info size={18} className="mt-0.5 text-primary-600" />
+          <p className="text-xs font-medium leading-relaxed text-primary-800">
+            En móvil cada contribuidor se muestra como tarjeta con sus 12 meses. Pulsa cualquier mes para registrar o editar el aporte.
+          </p>
+        </div>
       </div>
 
       <Card bodyClassName="p-0">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
+        <div className="grid gap-3 p-4 md:hidden">
+          {summary.data.contributors.map((contributor) => (
+            <article key={contributor.contributorId} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 font-bold text-primary-700">
+                      {contributor.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate font-bold text-slate-900">{contributor.name}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <ContributorStatusBadge status={contributor.status} />
+                        <ContributionStateBadge state={contributor.state} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">Total</p>
+                  <p className="mt-1 text-sm font-extrabold text-slate-900">{formatCentsAsCurrency(contributor.totalPaidCents)}</p>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {monthList.map((month) => {
+                  const contribution = contributionMap.get(byCellKey(contributor.contributorId, month)) ?? null;
+                  const amountCents = contribution?.amountCents ?? 0;
+                  const state = getContributionCellState(amountCents, monthlyAmountCents);
+
+                  return (
+                    <button
+                      key={month}
+                      type="button"
+                      onClick={() => openModalForCell(contributor, month)}
+                      className={`rounded-xl border px-2 py-3 text-center transition-all ${getCellStyle(state)} ${
+                        canMutateCurrentPeriod && contributor.status === 1 ? "hover:border-primary-300 hover:ring-2 hover:ring-primary-100" : "opacity-60"
+                      }`}
+                      disabled={!canMutateCurrentPeriod || contributor.status === 0}
+                    >
+                      <div className="text-[10px] font-bold uppercase tracking-wide">{getMonthLabel(month)}</div>
+                      <div className="mt-1 text-[11px] font-extrabold leading-tight">
+                        {amountCents > 0 ? formatCentsAsCurrency(amountCents) : "-"}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="hidden overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 md:block">
           <table className="w-full min-w-[1000px] border-collapse text-sm">
             <thead>
               <tr className="bg-slate-50/80">
-                <th className="sticky left-0 z-20 bg-slate-50 border-b border-r border-slate-100 px-6 py-4 text-left font-bold uppercase tracking-wider text-slate-600 text-[11px] shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                <th className="sticky left-0 z-20 border-b border-r border-slate-100 bg-slate-50 px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
                   Contribuidor
                 </th>
                 {monthList.map((month) => (
-                  <th key={month} className="border-b border-slate-100 px-2 py-4 text-center font-bold uppercase tracking-wider text-slate-600 text-[11px]">
+                  <th key={month} className="border-b border-slate-100 px-2 py-4 text-center text-[11px] font-bold uppercase tracking-wider text-slate-600">
                     {getMonthLabel(month)}
                   </th>
                 ))}
@@ -176,19 +225,19 @@ export const AnnualPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {summary.data.contributors.map((contributor) => (
-                <tr key={contributor.contributorId} className="group hover:bg-slate-50/30 transition-colors">
-                  <td className="sticky left-0 z-10 bg-white border-r border-slate-100 px-6 py-4 shadow-[2px_0_5px_rgba(0,0,0,0.02)] group-hover:bg-slate-50/50 transition-colors">
+                <tr key={contributor.contributorId} className="group transition-colors hover:bg-slate-50/30">
+                  <td className="sticky left-0 z-10 border-r border-slate-100 bg-white px-6 py-4 shadow-[2px_0_5px_rgba(0,0,0,0.02)] transition-colors group-hover:bg-slate-50/50">
                     <div className="flex items-center gap-3">
-                       <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-700">
-                          {contributor.name.charAt(0)}
-                       </div>
-                       <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-bold text-slate-900">{contributor.name}</span>
-                            <ContributorStatusBadge status={contributor.status} />
-                          </div>
-                          <ContributionStateBadge state={contributor.state} />
-                       </div>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-xs font-bold text-slate-700">
+                        {contributor.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="font-bold text-slate-900">{contributor.name}</span>
+                          <ContributorStatusBadge status={contributor.status} />
+                        </div>
+                        <ContributionStateBadge state={contributor.state} />
+                      </div>
                     </div>
                   </td>
 
@@ -232,24 +281,24 @@ export const AnnualPage = () => {
           </table>
         </div>
       </Card>
-      
-      <div className="flex items-center gap-8 p-6 rounded-2xl border border-slate-100 bg-white/50 text-[11px] font-bold uppercase tracking-widest text-slate-500 shadow-sm overflow-x-auto whitespace-nowrap scrollbar-hide">
-         <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded bg-emerald-50 border border-emerald-200"></span>
-            Completo
-         </div>
-         <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded bg-amber-50 border border-amber-200"></span>
-            Incompleto
-         </div>
-         <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded bg-indigo-50 border border-indigo-200"></span>
-            Excedente
-         </div>
-         <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded bg-slate-50 border border-slate-200"></span>
-            Pendiente
-         </div>
+
+      <div className="flex items-center gap-8 overflow-x-auto whitespace-nowrap rounded-2xl border border-slate-100 bg-white/50 p-6 text-[11px] font-bold uppercase tracking-widest text-slate-500 shadow-sm scrollbar-hide">
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded border border-emerald-200 bg-emerald-50"></span>
+          Completo
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded border border-amber-200 bg-amber-50"></span>
+          Incompleto
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded border border-indigo-200 bg-indigo-50"></span>
+          Excedente
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="h-3 w-3 rounded border border-slate-200 bg-slate-50"></span>
+          Pendiente
+        </div>
       </div>
 
       <ContributionModal
@@ -288,4 +337,3 @@ export const AnnualPage = () => {
     </div>
   );
 };
-

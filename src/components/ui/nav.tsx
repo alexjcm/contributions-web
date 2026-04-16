@@ -106,6 +106,10 @@ export const AppNav = () => {
         </div>
 
         <nav className="flex items-center gap-1 pb-4 overflow-x-auto scrollbar-hide">
+          <NavLink to="/contributions" className={navLinkClass}>
+            <ReceiptText size={18} />
+            Aportes
+          </NavLink>
           <NavLink to="/dashboard" className={navLinkClass}>
             <LayoutDashboard size={18} />
             Dashboard
@@ -113,10 +117,6 @@ export const AppNav = () => {
           <NavLink to="/annual" className={navLinkClass}>
             <CalendarDays size={18} />
             Vista Anual
-          </NavLink>
-          <NavLink to="/contributions" className={navLinkClass}>
-            <ReceiptText size={18} />
-            Aportes
           </NavLink>
           {canManageSettings && (
             <NavLink to="/settings" className={navLinkClass}>
@@ -138,4 +138,3 @@ export const AppNav = () => {
     </header>
   );
 };
-

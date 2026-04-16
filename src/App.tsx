@@ -54,10 +54,10 @@ export const App = () => {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="contributions" element={withSuspense(<ContributionsPage />)} />
+        <Route index element={<Navigate to="/contributions" replace />} />
         <Route path="dashboard" element={withSuspense(<DashboardPage />)} />
         <Route path="annual" element={withSuspense(<AnnualPage />)} />
-        <Route path="contributions" element={withSuspense(<ContributionsPage />)} />
         <Route
           path="settings"
           element={

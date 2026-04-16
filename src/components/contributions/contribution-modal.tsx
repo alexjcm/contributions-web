@@ -1,14 +1,6 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { 
-  ReceiptText, 
-  User, 
-  Calendar, 
-  DollarSign, 
-  CalendarCheck, 
-  FileText,
-  AlertCircle
-} from "lucide-react";
+import { ReceiptText, AlertCircle } from "lucide-react";
 
 import type { Contribution, Contributor } from "../../types/domain";
 import { getMonthLongLabel } from "../../lib/date";
@@ -21,7 +13,6 @@ export type ContributionPayload = {
   year: number;
   month: number;
   amountCents: number;
-  paidAt: string | null;
   notes: string | null;
 };
 
@@ -45,7 +36,6 @@ type FormState = {
   year: string;
   month: string;
   amount: string;
-  paidAt: string;
   notes: string;
 };
 
@@ -61,7 +51,6 @@ const buildInitialState = (
     year: String(source?.year ?? params.defaultYear),
     month: String(params.fixedMonth ?? source?.month ?? params.defaultMonth),
     amount: formatCentsAsInputValue(source?.amountCents ?? params.monthlyAmountCents),
-    paidAt: source?.paidAt ?? "",
     notes: source?.notes ?? ""
   };
 };
@@ -151,17 +140,11 @@ export const ContributionModal = ({
       return;
     }
 
-    if (form.paidAt && !/^\d{4}-\d{2}-\d{2}$/.test(form.paidAt)) {
-      setFormError("La fecha de pago debe tener formato YYYY-MM-DD.");
-      return;
-    }
-
     await onSubmit({
       contributorId,
       year,
       month,
       amountCents,
-      paidAt: form.paidAt || null,
       notes: form.notes.trim() ? form.notes.trim() : null
     });
   };
@@ -219,28 +202,30 @@ export const ContributionModal = ({
                     ))}
                   </Select>
 
-                  <Input
-                    label="Año"
-                    type="number"
-                    min={2000}
-                    max={2100}
-                    value={form.year}
-                    onChange={(event) => setForm((previous) => ({ ...previous, year: event.target.value }))}
-                    disabled={submitting}
-                  />
+                  <div className="sm:col-span-2 grid gap-4 sm:grid-cols-2">
+                    <Input
+                      label="Año"
+                      type="number"
+                      min={2000}
+                      max={2100}
+                      value={form.year}
+                      onChange={(event) => setForm((previous) => ({ ...previous, year: event.target.value }))}
+                      disabled={submitting}
+                    />
 
-                  <Select
-                    label="Mes Correspondiente"
-                    value={form.month}
-                    onChange={(event) => setForm((previous) => ({ ...previous, month: event.target.value }))}
-                    disabled={!canEditMonth || submitting}
-                  >
-                    {monthOptions.map((month) => (
-                      <option key={month} value={month}>
-                        {getMonthLongLabel(month)}
-                      </option>
-                    ))}
-                  </Select>
+                    <Select
+                      label="Mes Correspondiente"
+                      value={form.month}
+                      onChange={(event) => setForm((previous) => ({ ...previous, month: event.target.value }))}
+                      disabled={!canEditMonth || submitting}
+                    >
+                      {monthOptions.map((month) => (
+                        <option key={month} value={month}>
+                          {getMonthLongLabel(month)}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
 
                   <Input
                     label="Monto Pagado (USD)"
@@ -248,14 +233,6 @@ export const ContributionModal = ({
                     inputMode="decimal"
                     value={form.amount}
                     onChange={(event) => setForm((previous) => ({ ...previous, amount: event.target.value }))}
-                    disabled={submitting}
-                  />
-
-                  <Input
-                    label="Fecha de Ejecución (opcional)"
-                    type="date"
-                    value={form.paidAt}
-                    onChange={(event) => setForm((previous) => ({ ...previous, paidAt: event.target.value }))}
                     disabled={submitting}
                   />
 
@@ -306,4 +283,3 @@ export const ContributionModal = ({
     </Transition>
   );
 };
-

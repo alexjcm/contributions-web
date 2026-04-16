@@ -20,7 +20,6 @@ export type Contribution = {
   year: number;
   month: number;
   amountCents: number;
-  paidAt: string | null;
   notes: string | null;
   status: ContributorStatus;
   createdAt: string;
