@@ -1,11 +1,12 @@
 import { StrictMode } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router";
+import { BrowserRouter, useNavigate } from "react-router";
 
 import { App } from "./App";
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "./config/auth";
 import { AppContextProvider } from "./context/app-context";
+import { clearSessionRecoveryAttempt, normalizeReturnTo } from "./lib/auth-navigation";
 import "./styles.css";
 
 const PRELOAD_RELOAD_WINDOW_MS = 10_000;
@@ -32,24 +33,36 @@ if (!rootElement) {
   throw new Error("Missing #root element");
 }
 
+const Auth0ProviderWithNavigation = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Auth0Provider
+      domain={AUTH0_DOMAIN}
+      clientId={AUTH0_CLIENT_ID}
+      useRefreshTokens
+      cacheLocation="localstorage"
+      authorizationParams={{
+        audience: AUTH0_AUDIENCE,
+        scope: "openid profile email offline_access",
+        redirect_uri: window.location.origin
+      }}
+      onRedirectCallback={(appState) => {
+        clearSessionRecoveryAttempt();
+        navigate(normalizeReturnTo(appState?.returnTo), { replace: true });
+      }}
+    >
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
+    </Auth0Provider>
+  );
+};
+
 createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
-      <Auth0Provider
-        domain={AUTH0_DOMAIN}
-        clientId={AUTH0_CLIENT_ID}
-        useRefreshTokens
-        cacheLocation="localstorage"
-        authorizationParams={{
-          audience: AUTH0_AUDIENCE,
-          scope: "openid profile email offline_access",
-          redirect_uri: window.location.origin
-        }}
-      >
-        <AppContextProvider>
-          <App />
-        </AppContextProvider>
-      </Auth0Provider>
+      <Auth0ProviderWithNavigation />
     </BrowserRouter>
   </StrictMode>
 );

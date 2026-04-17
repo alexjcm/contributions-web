@@ -42,9 +42,11 @@ const unexpectedPayloadError = <T>(status: number): ApiResponse<T> => ({
 
 export class ApiClient {
   private readonly getToken: TokenGetter;
+  private readonly onAuthFailure?: () => void;
 
-  constructor(getToken: TokenGetter) {
+  constructor(getToken: TokenGetter, onAuthFailure?: () => void) {
     this.getToken = getToken;
+    this.onAuthFailure = onAuthFailure;
   }
 
   async get<T>(path: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
@@ -122,6 +124,10 @@ export class ApiClient {
 
       if (isApiResponse<T>(payload)) {
         if (!payload.ok) {
+          if (payload.status === 401 && payload.error.code === "UNAUTHENTICATED") {
+            this.onAuthFailure?.();
+          }
+
           return {
             ...payload,
             error: {

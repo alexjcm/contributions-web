@@ -1,19 +1,65 @@
+import { useEffect, useMemo, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Navigate } from "react-router";
-import { LogIn, ShieldCheck, ChevronRight } from "lucide-react";
+import { Navigate, useSearchParams } from "react-router";
+import { LogIn, ShieldCheck } from "lucide-react";
 
+import {
+  canAttemptSessionRecovery,
+  clearSessionRecoveryAttempt,
+  markSessionRecoveryAttempt,
+  normalizeReturnTo,
+  SESSION_RECOVERY_QUERY_REASON,
+  isSessionRecoveryReason
+} from "../lib/auth-navigation";
 import { PageLoader } from "../components/ui/loaders";
 import { Button } from "../components/ui/button";
 
 export const SignInPage = () => {
   const { isLoading, isAuthenticated, error, loginWithRedirect } = useAuth0();
+  const [searchParams] = useSearchParams();
+  const [autoRedirecting, setAutoRedirecting] = useState<boolean>(false);
+
+  const returnTo = useMemo(() => normalizeReturnTo(searchParams.get("returnTo")), [searchParams]);
+  const reason = searchParams.get("reason");
+  const canAutoRecover = isSessionRecoveryReason(reason) && canAttemptSessionRecovery(returnTo);
+
+  useEffect(() => {
+    if (!isSessionRecoveryReason(reason) || !canAutoRecover || isLoading || isAuthenticated) {
+      return;
+    }
+
+    markSessionRecoveryAttempt(returnTo);
+    setAutoRedirecting(true);
+
+    void loginWithRedirect({
+      appState: { returnTo },
+      authorizationParams: {
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE
+      }
+    }).catch((redirectError) => {
+      console.warn("No se pudo redirigir automáticamente al login.", redirectError);
+      setAutoRedirecting(false);
+    });
+  }, [canAutoRecover, isAuthenticated, isLoading, loginWithRedirect, reason, returnTo]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    clearSessionRecoveryAttempt();
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return <PageLoader label="Cargando autenticación..." />;
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={returnTo} replace />;
+  }
+
+  if (autoRedirecting) {
+    return <PageLoader label="Tu sesión venció. Redirigiendo al ingreso..." />;
   }
 
   return (
@@ -32,6 +78,15 @@ export const SignInPage = () => {
         </div>
 
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-200/50">
+          {reason === SESSION_RECOVERY_QUERY_REASON ? (
+            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 animate-in slide-in-from-top-2">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+              <p className="text-sm font-bold leading-relaxed text-amber-900">
+                Tu sesión venció o no pudo verificarse. Ingresa de nuevo para continuar.
+              </p>
+            </div>
+          ) : null}
+
           {error ? (
             <div className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 animate-in slide-in-from-top-2">
               <div className="h-2 w-2 rounded-full bg-rose-500 mt-1.5 shrink-0" />
@@ -42,11 +97,19 @@ export const SignInPage = () => {
           ) : null}
 
           <Button
-            onClick={() => loginWithRedirect()}
+            onClick={() => {
+              clearSessionRecoveryAttempt();
+              void loginWithRedirect({
+                appState: { returnTo },
+                authorizationParams: {
+                  audience: import.meta.env.VITE_AUTH0_AUDIENCE
+                }
+              });
+            }}
             className="w-full h-12 text-base font-bold"
             icon={LogIn}
           >
-            Entrar al Sistema
+            {reason === SESSION_RECOVERY_QUERY_REASON ? "Volver a iniciar sesión" : "Entrar al Sistema"}
           </Button>
 
         </div>
@@ -58,4 +121,3 @@ export const SignInPage = () => {
     </main>
   );
 };
-
