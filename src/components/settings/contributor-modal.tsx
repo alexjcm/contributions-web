@@ -4,11 +4,7 @@ import { User } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/fields";
-
-export type ContributorDraft = {
-  name: string;
-  email: string;
-};
+import type { ContributorDraft } from "../../types/settings";
 
 type ContributorModalProps = {
   open: boolean;
@@ -19,11 +15,6 @@ type ContributorModalProps = {
   onClose: () => void;
   onChange: (draft: ContributorDraft) => void;
   onSubmit: () => void;
-};
-
-export const emptyContributorDraft: ContributorDraft = {
-  name: "",
-  email: ""
 };
 
 export const ContributorModal = ({

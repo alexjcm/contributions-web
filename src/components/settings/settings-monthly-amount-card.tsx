@@ -22,7 +22,8 @@ export const SettingsMonthlyAmountCard = ({
 }: SettingsMonthlyAmountCardProps) => {
   return (
     <Card
-      className="w-full"
+      className="w-full max-w-[22rem] sm:max-w-md xl:max-w-none"
+      bodyClassName="px-4 py-4 sm:px-6 sm:py-5"
       header={
         <div className="flex items-center gap-2">
           <Settings size={18} className="text-primary-600" />

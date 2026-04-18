@@ -157,7 +157,7 @@ export const DashboardPage = () => {
                         {item.name}
                       </div>
                       <div>
-                        {item.email && <p className="text-xs text-slate-400">{item.email}</p>}
+                        {item.email && <p className="text-xs text-slate-600">{item.email}</p>}
                       </div>
                     </div>
                   </td>

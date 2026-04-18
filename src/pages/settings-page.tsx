@@ -1,15 +1,13 @@
 import { Settings, ShieldAlert } from "lucide-react";
 
-import { ContributorModal } from "../components/settings/contributor-modal";
+import { SettingsDialogsController } from "../components/settings/settings-dialogs-controller";
 import { SettingsContributorsCard } from "../components/settings/settings-contributors-card";
 import { SettingsMonthlyAmountCard } from "../components/settings/settings-monthly-amount-card";
 import { Card } from "../components/ui/card";
-import { ConfirmModal } from "../components/ui/confirm-modal";
 import { SectionLoader } from "../components/ui/loaders";
 import { APP_PERMISSIONS } from "../config/permissions";
 import { useAppContext } from "../context/app-context";
-import { useSettingsPageState } from "../hooks/use-settings-page-state";
-import { formatCentsAsInputValue } from "../lib/money";
+import { useSettingsPageData } from "../hooks/use-settings-page-data";
 
 export const SettingsPage = () => {
   const { permissionsLoaded, hasPermission } = useAppContext();
@@ -18,29 +16,10 @@ export const SettingsPage = () => {
     sortedContributors,
     amountInput,
     pendingAmountCents,
-    savingAmount,
-    newContributor,
-    isCreateContributorOpen,
-    savingContributor,
-    editingContributor,
-    editDraft,
-    pendingStatusChange,
-    changingStatus,
     setPendingAmountCents,
-    setNewContributor,
-    setEditDraft,
-    setPendingStatusChange,
     handleAmountInputChange,
-    requestMonthlyAmountUpdate,
-    saveMonthlyAmount,
-    openCreateContributorModal,
-    closeCreateContributorModal,
-    createContributor,
-    startEditingContributor,
-    closeEditContributorModal,
-    saveContributorEdit,
-    changeContributorStatus
-  } = useSettingsPageState();
+    requestMonthlyAmountUpdate
+  } = useSettingsPageData();
 
   if (!permissionsLoaded) {
     return <SectionLoader label="Cargando permisos..." />;
@@ -73,83 +52,37 @@ export const SettingsPage = () => {
         </div>
       </header>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(280px,360px)_minmax(0,1fr)]">
-        <div className="space-y-6 xl:max-w-[360px]">
-          <SettingsMonthlyAmountCard
-            amountInput={amountInput}
-            loading={settings.loading && !settings.data}
-            saving={savingAmount}
-            onAmountChange={handleAmountInputChange}
-            onRequestUpdate={requestMonthlyAmountUpdate}
-          />
-        </div>
+      <SettingsDialogsController
+        pendingAmountCents={pendingAmountCents}
+        setPendingAmountCents={setPendingAmountCents}
+        onSavingAmountChange={() => undefined}
+        onEditContributor={() => undefined}
+        onToggleContributorStatus={() => undefined}
+        onOpenCreateContributor={() => undefined}
+      >
+        {({ openCreateContributorModal, requestContributorStatusChange, savingAmount, startEditingContributor }) => (
+          <div className="grid gap-6 xl:grid-cols-[minmax(280px,360px)_minmax(0,1fr)]">
+            <div className="space-y-6 xl:max-w-[360px]">
+              <SettingsMonthlyAmountCard
+                amountInput={amountInput}
+                loading={settings.loading && !settings.data}
+                saving={savingAmount}
+                onAmountChange={handleAmountInputChange}
+                onRequestUpdate={requestMonthlyAmountUpdate}
+              />
+            </div>
 
-        <div>
-          <SettingsContributorsCard
-            contributors={sortedContributors}
-            onCreateContributor={openCreateContributorModal}
-            onEditContributor={startEditingContributor}
-            onToggleContributorStatus={setPendingStatusChange}
-          />
-        </div>
-      </div>
-
-      <ContributorModal
-        open={isCreateContributorOpen}
-        title="Nuevo Contribuyente"
-        submitLabel="Registrar"
-        draft={newContributor}
-        submitting={savingContributor}
-        onClose={closeCreateContributorModal}
-        onChange={setNewContributor}
-        onSubmit={createContributor}
-      />
-
-      <ContributorModal
-        open={Boolean(editingContributor)}
-        title="Editar Contribuyente"
-        submitLabel="Guardar cambios"
-        draft={editDraft}
-        submitting={savingContributor}
-        onClose={closeEditContributorModal}
-        onChange={setEditDraft}
-        onSubmit={saveContributorEdit}
-      />
-
-      <ConfirmModal
-        open={pendingAmountCents !== null}
-        title="Confirmar actualización de monto"
-        description={
-          pendingAmountCents !== null
-            ? `Se actualizará el monto base mensual a ${formatCentsAsInputValue(pendingAmountCents)} USD. Este cambio impactará los cálculos y resúmenes del sistema.`
-            : ""
-        }
-        confirmLabel="Actualizar monto"
-        loading={savingAmount}
-        onCancel={() => setPendingAmountCents(null)}
-        onConfirm={() => {
-          void saveMonthlyAmount();
-        }}
-      />
-
-      <ConfirmModal
-        open={Boolean(pendingStatusChange)}
-        title={pendingStatusChange?.status === 1 ? "Desactivar contribuyente" : "Activar contribuyente"}
-        description={
-          pendingStatusChange
-            ? pendingStatusChange.status === 1
-              ? `Se desactivará a ${pendingStatusChange.name}. No podrá realizar nuevos aportes, pero se conserva su historial.`
-              : `Se activará nuevamente a ${pendingStatusChange.name}. Volverá a estar disponible para registrar aportes.`
-            : ""
-        }
-        confirmLabel={pendingStatusChange?.status === 1 ? "Desactivar" : "Activar"}
-        danger={pendingStatusChange?.status === 1}
-        loading={changingStatus}
-        onCancel={() => setPendingStatusChange(null)}
-        onConfirm={() => {
-          void changeContributorStatus();
-        }}
-      />
+            <div>
+              <SettingsContributorsCard
+                contributors={sortedContributors}
+                onCreateContributor={openCreateContributorModal}
+                onEditContributor={startEditingContributor}
+                onToggleContributorStatus={requestContributorStatusChange}
+              />
+            </div>
+          </div>
+        )}
+      </SettingsDialogsController>
     </div>
   );
 };

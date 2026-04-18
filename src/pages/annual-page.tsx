@@ -78,6 +78,21 @@ const getCellStyle = (state: ReturnType<typeof getContributionCellState>): strin
   }
 };
 
+const getMutedCellStyle = (state: ReturnType<typeof getContributionCellState>): string => {
+  switch (state) {
+    case "pending":
+      return "border-slate-300 bg-slate-50 text-slate-500";
+    case "incomplete":
+      return "border-amber-200 bg-amber-50 text-amber-800";
+    case "complete":
+      return "border-emerald-200 bg-emerald-50 text-emerald-800";
+    case "overpaid":
+      return "border-indigo-200 bg-indigo-50 text-indigo-800";
+    default:
+      return "border-slate-300 bg-slate-50 text-slate-500";
+  }
+};
+
 export const AnnualPage = () => {
   const { activeYear, currentBusinessYear, setActiveYear, canMutateCurrentPeriod, contributionRestrictionMessage } =
     useAppContext();
@@ -227,22 +242,25 @@ export const AnnualPage = () => {
         <div className="flex items-start gap-3">
           <Info size={18} className="mt-0.5 text-primary-600" />
           <p className="text-xs font-medium leading-relaxed text-primary-800">
-            En móvil cada contribuyente se muestra como tarjeta con sus 12 meses. Pulsa cualquier mes para registrar o corregir rápidamente el aporte de esa celda. Si necesitas eliminarlo, usa Registro.
+            En móvil cada contribuyente se muestra en un bloque compacto con sus 12 meses. Pulsa cualquier mes para registrar o corregir rápidamente el aporte de esa celda. Si necesitas eliminarlo, usa Registro.
           </p>
         </div>
       </div>
 
       <Card bodyClassName="p-0">
-        <div className="grid gap-3 p-4 md:hidden">
-          {contributors.map((contributor) => (
-            <article key={contributor.contributorId} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="divide-y divide-slate-200 px-4 md:hidden">
+          {contributors.map((contributor, index) => (
+            <article
+              key={contributor.contributorId}
+              className={`py-4 ${index === 0 ? "pt-4" : ""} ${index === contributors.length - 1 ? "pb-4" : ""}`}
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-3">
                     <div className="min-w-0">
-                              <p className="truncate font-bold text-slate-900">{contributor.name}</p>
-                              <p className="mt-1 text-xs font-medium text-slate-500">{getStateLabel(contributor.state)}</p>
-                            </div>
+                      <p className="truncate font-bold text-slate-900">{contributor.name}</p>
+                      <p className="mt-1 text-xs font-medium text-slate-500">{getStateLabel(contributor.state)}</p>
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -251,25 +269,28 @@ export const AnnualPage = () => {
                 </div>
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2">
+              <div className="mt-4 grid grid-cols-3 gap-2.5">
                 {monthList.map((month) => {
                   const contribution = contributionMap.get(byCellKey(contributor.contributorId, month)) ?? null;
                   const amountCents = contribution?.amountCents ?? 0;
                   const state = getContributionCellState(amountCents, monthlyAmountCents);
                   const isCurrentMonth = isCurrentBusinessYear && month === currentBusinessMonth;
                   const isFutureMonth = isCurrentBusinessYear && month > currentBusinessMonth;
+                  const isInteractive = canMutateCurrentPeriod && contributor.status === 1;
+                  const baseCellStyle =
+                    isFutureMonth || !isInteractive ? getMutedCellStyle(state) : getCellStyle(state);
 
                   return (
                     <button
                       key={month}
                       type="button"
                       onClick={() => openModalForCell(contributor, month)}
-                      className={`rounded-xl border px-2 py-2.5 text-center transition-all ${getCellStyle(state)} ${
+                      className={`rounded-xl border px-2 py-2.5 text-center transition-all ${baseCellStyle} ${
                         isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100" : ""
-                      } ${isFutureMonth ? "opacity-45" : ""} ${
-                        canMutateCurrentPeriod && contributor.status === 1 ? "hover:border-primary-300 hover:ring-2 hover:ring-primary-100" : "opacity-60"
+                      } ${
+                        isInteractive ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100" : "cursor-not-allowed"
                       }`}
-                      disabled={!canMutateCurrentPeriod || contributor.status === 0}
+                      disabled={!isInteractive}
                     >
                       <div className="text-[10px] font-bold uppercase tracking-wide text-current">
                         {getMonthLabel(month)}
@@ -333,7 +354,7 @@ export const AnnualPage = () => {
                       key={month}
                       className={`border-b border-slate-100 px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wider ${
                         isCurrentMonth ? "bg-primary-50 text-primary-700" : "text-slate-600"
-                      } ${isFutureMonth ? "opacity-55" : ""}`}
+                      } ${isFutureMonth ? "bg-slate-50/70 text-slate-500" : ""}`}
                     >
                       <div className="flex flex-col items-center gap-1">
                         <span>{getMonthLabel(month)}</span>
@@ -367,23 +388,26 @@ export const AnnualPage = () => {
                     const state = getContributionCellState(amountCents, monthlyAmountCents);
                     const isCurrentMonth = isCurrentBusinessYear && month === currentBusinessMonth;
                     const isFutureMonth = isCurrentBusinessYear && month > currentBusinessMonth;
+                    const isInteractive = canMutateCurrentPeriod && contributor.status === 1;
+                    const baseCellStyle =
+                      isFutureMonth || !isInteractive ? getMutedCellStyle(state) : getCellStyle(state);
 
                     return (
                       <td
                         key={month}
-                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40" : ""} ${isFutureMonth ? "opacity-60" : ""}`}
+                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40" : ""} ${isFutureMonth ? "bg-slate-50/50" : ""}`}
                       >
                         <button
                           type="button"
                           onClick={() => openModalForCell(contributor, month)}
-                          className={`w-full min-h-[44px] rounded-lg border px-2 py-2 text-[11px] font-extrabold transition-all ${getCellStyle(state)} ${
+                          className={`w-full min-h-[44px] rounded-lg border px-2 py-2 text-[11px] font-extrabold transition-all ${baseCellStyle} ${
                             isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100" : ""
                           } ${
-                            canMutateCurrentPeriod && contributor.status === 1
+                            isInteractive
                               ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100"
-                              : "cursor-not-allowed opacity-60"
+                              : "cursor-not-allowed"
                           }`}
-                          disabled={!canMutateCurrentPeriod || contributor.status === 0}
+                          disabled={!isInteractive}
                           aria-label={
                             canMutateCurrentPeriod
                               ? contributor.status === 0

@@ -27,7 +27,7 @@ export const SettingsContributorsCard = ({
             Lista de Contribuyentes
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
               {contributors.length} registros
             </span>
             <Button size="sm" icon={Plus} onClick={onCreateContributor}>
@@ -53,7 +53,7 @@ export const SettingsContributorsCard = ({
                 <td className="px-6 py-3.5">
                   <div>
                     <div className="font-bold leading-tight text-slate-900">{contributor.name}</div>
-                    <div className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-slate-400">
+                    <div className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-slate-600">
                       <Mail size={10} />
                       {contributor.email ?? "Sin correo"}
                     </div>

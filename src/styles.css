@@ -1,5 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
   --color-primary-50: #eff6ff;
@@ -20,7 +27,7 @@
   --color-card: #ffffff;
   --color-border: #e2e8f0;
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -46,4 +53,3 @@ body {
 :focus-visible {
   @apply outline-hidden ring-2 ring-primary-500 ring-offset-2;
 }
-
