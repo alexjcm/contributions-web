@@ -108,7 +108,8 @@ export const SignInPage = () => {
                 void loginWithRedirect({
                   appState: { returnTo },
                   authorizationParams: {
-                    audience: import.meta.env.VITE_AUTH0_AUDIENCE
+                    audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+                    ...(error ? { prompt: "login" } : {})
                   }
                 });
               }}
