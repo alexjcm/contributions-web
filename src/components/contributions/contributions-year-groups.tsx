@@ -35,7 +35,7 @@ export const ContributionsYearGroups = ({
         <section key={yearGroup.year} className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-extrabold text-slate-900">Aportes {yearGroup.year}</h3>
+              <h3 className="text-xl font-extrabold tracking-tight text-slate-900">Aportes {yearGroup.year}</h3>
             </div>
           </div>
 
@@ -44,16 +44,22 @@ export const ContributionsYearGroups = ({
             const isCurrentMonth = group.year === activeYear && group.month === currentBusinessMonth;
 
             return (
-              <Card key={group.key} bodyClassName="p-0">
+              <Card
+                key={group.key}
+                className="border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.96))] shadow-[0_14px_30px_rgba(37,99,235,0.05)]"
+                bodyClassName="p-0"
+              >
                 <button
                   type="button"
                   onClick={() => onToggleMonth(group.key, !expanded)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-2.5 text-left transition-colors hover:bg-slate-50"
+                  className="flex w-full items-center justify-between gap-4 px-5 py-3 text-left transition-colors hover:bg-primary-50/50"
                 >
                   <div className="flex items-center gap-3">
-                    <p className="text-base font-extrabold text-slate-900">{group.label}</p>
+                    <div>
+                      <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-slate-900">{group.label}</p>
+                    </div>
                     {isCurrentMonth ? (
-                      <span className="rounded-full bg-primary-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-700">
+                      <span className="rounded-full border border-primary-200 bg-primary-50/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-800">
                         Actual
                       </span>
                     ) : null}
@@ -64,25 +70,27 @@ export const ContributionsYearGroups = ({
                 </button>
 
                 {expanded ? (
-                  <div className="border-t border-slate-100">
+                  <div className="border-t border-[color:var(--color-border)]">
                     {group.items.length === 0 ? (
                       <div className="px-5 py-4 text-sm text-slate-500">No hay aportes registrados en {group.label}.</div>
                     ) : null}
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-[color:var(--color-border)]">
                       {group.items.map((item) => {
                         const contributor = contributorById.get(item.contributorId);
 
                         return (
                           <article
                             key={item.id}
-                            className="grid gap-2 px-4 py-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5"
+                            className="grid gap-2 px-4 py-3.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5"
                           >
                             <div className="min-w-0">
                               <p className="truncate text-sm font-bold text-slate-900">{item.contributorName}</p>
                             </div>
 
-                            <div className="flex items-center justify-between gap-3 sm:min-w-[200px] sm:justify-end">
-                              <div className="text-sm font-extrabold text-slate-900">{formatCentsAsCurrency(item.amountCents)}</div>
+                            <div className="flex flex-wrap items-center justify-between gap-3 sm:min-w-[200px] sm:flex-nowrap sm:justify-end">
+                              <div className="rounded-full border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.96)] px-3 py-1 text-sm font-extrabold text-slate-900 shadow-[0_6px_14px_rgba(37,99,235,0.04)]">
+                                {formatCentsAsCurrency(item.amountCents)}
+                              </div>
                               <div className="flex gap-2 sm:justify-end">
                                 <Button
                                   variant="outline"

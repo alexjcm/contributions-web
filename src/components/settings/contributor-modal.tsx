@@ -39,7 +39,7 @@ export const ContributorModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-slate-900/32 backdrop-blur-sm" />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto p-4 md:p-8">
@@ -53,10 +53,10 @@ export const ContributorModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl transition-all">
-                <div className="border-b border-slate-100 bg-slate-50 px-8 py-6">
+              <DialogPanel className="w-full max-w-lg overflow-hidden rounded-[1.75rem] border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.97))] shadow-[0_24px_60px_rgba(37,99,235,0.12)] transition-all">
+                <div className="border-b border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
                   <DialogTitle className="flex items-center gap-3 text-lg font-extrabold text-slate-900">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-primary-600 shadow-sm">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm">
                       <User size={18} />
                     </div>
                     {title}
@@ -81,7 +81,7 @@ export const ContributorModal = ({
                   />
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-8 py-6 sm:flex-row-reverse">
+                <div className="flex flex-col gap-3 border-t border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse">
                   <Button onClick={onSubmit} isLoading={submitting} className="sm:min-w-[170px]">
                     {submitLabel}
                   </Button>

@@ -19,24 +19,27 @@ export const AppNav = () => {
   const canManageSettings = hasPermission(APP_PERMISSIONS.settingsWrite);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }): string => {
-    return `shrink-0 flex items-center gap-1 px-2.5 py-2 text-[13px] font-semibold transition-all rounded-lg sm:gap-2 sm:px-4 sm:text-sm ${
+    return `flex shrink-0 items-center gap-1 px-2.5 py-2 text-[13px] font-semibold transition-all rounded-lg sm:gap-2 sm:px-3 sm:text-sm md:px-4 ${
       isActive 
-        ? "bg-primary-600 text-white shadow-md shadow-primary-200" 
-        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+        ? "border border-primary-700 bg-primary-600 !text-white shadow-[0_8px_18px_rgba(37,99,235,0.18)] [&_svg]:!text-white" 
+        : "text-primary-900/84 hover:bg-primary-50 hover:text-primary-900 [&_svg]:text-primary-500"
     }`;
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,249,252,0.9))] backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
           <div className="flex flex-col">
-            <h1 className="text-lg font-bold tracking-tight text-slate-900">Aportes Familiares</h1>
+            <h1 className="text-[1.75rem] font-bold leading-none text-slate-900 sm:text-[2rem]">Aportes Familiares</h1>
+            <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.24em] text-primary-600">
+              Portal DCM
+            </span>
           </div>
 
           <div className="hidden items-center gap-4 lg:flex">
-            <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-600">
-              <UserCircle size={16} className="text-slate-400" />
+            <div className="flex items-center gap-2 rounded-full border border-primary-100 bg-white px-3 py-1.5 text-xs font-medium text-slate-700">
+              <UserCircle size={16} className="text-primary-600" />
               <span className="max-w-[150px] truncate">{userEmail ?? "Usuario"}</span>
             </div>
 
@@ -63,7 +66,7 @@ export const AppNav = () => {
           </div>
         </div>
 
-        <nav className="flex items-center gap-1 pb-4 pr-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <nav className="flex items-center gap-1 overflow-x-auto pb-4 pr-4 whitespace-nowrap scrollbar-hide sm:flex-wrap sm:gap-2 sm:overflow-visible sm:pr-0 sm:whitespace-normal">
           <NavLink to="/contributions" className={navLinkClass}>
             <ReceiptText size={16} className="sm:h-[18px] sm:w-[18px]" />
             Registro
@@ -86,8 +89,8 @@ export const AppNav = () => {
 
         {contributionRestrictionMessage && (
           <div className="mb-4">
-            <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900 shadow-sm animate-in fade-in slide-in-from-top-1">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+            <div className="flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs font-medium text-primary-900 shadow-sm animate-in fade-in slide-in-from-top-1">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-primary-500"></span>
               {contributionRestrictionMessage}
             </div>
           </div>

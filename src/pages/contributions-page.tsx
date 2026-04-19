@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Plus, ReceiptText } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { ContributionsFilters } from "../components/contributions/contributions-filters";
 import { ContributionsYearGroups } from "../components/contributions/contributions-year-groups";
@@ -52,12 +52,8 @@ export const ContributionsPage = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 shadow-inner">
-            <ReceiptText size={24} />
-          </div>
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Registro de Aportes</h2>
-            <p className="mt-1 text-sm text-slate-500">Gestión detallada por mes para crear, corregir y eliminar aportes del período.</p>
           </div>
         </div>
 
@@ -65,7 +61,7 @@ export const ContributionsPage = () => {
           icon={Plus}
           onClick={openCreateModal}
           disabled={!canMutateCurrentPeriod}
-          className="w-full shadow-md shadow-primary-200 sm:w-auto"
+          className="w-full sm:w-auto"
         >
           Nuevo Aporte
         </Button>
@@ -81,7 +77,7 @@ export const ContributionsPage = () => {
 
       {contributions.loading && !contributions.data ? <SectionLoader label="Cargando registro de aportes..." /> : null}
       {contributions.error ? (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-800 animate-in fade-in">
+        <div className="rounded-[1.2rem] border border-rose-300 bg-rose-100/70 p-4 text-sm font-medium text-rose-900 animate-in fade-in">
           No se pudo cargar el listado: {contributions.error}
         </div>
       ) : null}

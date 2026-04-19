@@ -1,10 +1,10 @@
 import type { ContributionState, ContributorStatus } from "../../types/domain";
 
 const stateStyles: Record<ContributionState, string> = {
-  pending: "bg-slate-100 text-slate-700 border-slate-200",
-  incomplete: "bg-amber-50 text-amber-700 border-amber-200",
-  complete: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  overpaid: "bg-indigo-50 text-indigo-700 border-indigo-200"
+  pending: "border-stone-300 bg-stone-100/90 text-stone-700",
+  incomplete: "border-amber-300 bg-amber-100/70 text-amber-800",
+  complete: "border-emerald-300 bg-emerald-100/70 text-emerald-800",
+  overpaid: "border-blue-300 bg-blue-100/70 text-blue-800"
 };
 
 const stateLabels: Record<ContributionState, string> = {
@@ -29,8 +29,8 @@ export const ContributorStatusBadge = ({ status }: { status: ContributorStatus }
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
         isActive 
-          ? "border-emerald-200 bg-emerald-50 text-emerald-700" 
-          : "border-rose-200 bg-rose-50 text-rose-700"
+          ? "border-emerald-300 bg-emerald-100/70 text-emerald-800" 
+          : "border-rose-300 bg-rose-100/70 text-rose-800"
       }`}
     >
       {isActive ? "Activo" : "Inactivo"}

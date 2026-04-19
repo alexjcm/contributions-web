@@ -22,11 +22,11 @@ export const SettingsMonthlyAmountCard = ({
 }: SettingsMonthlyAmountCardProps) => {
   return (
     <Card
-      className="w-full max-w-[22rem] sm:max-w-md xl:max-w-none"
+      className="w-full border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-[0_18px_36px_rgba(37,99,235,0.08)]"
       bodyClassName="px-4 py-4 sm:px-6 sm:py-5"
       header={
         <div className="flex items-center gap-2">
-          <Settings size={18} className="text-primary-600" />
+          <Settings size={18} className="text-primary-700" />
           Configuración Global
         </div>
       }
@@ -36,6 +36,9 @@ export const SettingsMonthlyAmountCard = ({
           <SectionLoader label="Cargando..." />
         ) : (
           <>
+            <p className="text-sm leading-6 text-slate-600">
+              Define el monto base mensual que se utiliza como referencia para el seguimiento operativo del periodo.
+            </p>
             <Input
               label="Monto Base Mensual (USD)"
               type="text"
@@ -43,7 +46,7 @@ export const SettingsMonthlyAmountCard = ({
               value={amountInput}
               onChange={(event) => onAmountChange(event.target.value)}
             />
-            <Button icon={Save} onClick={onRequestUpdate} isLoading={saving} className="w-full sm:w-auto">
+            <Button icon={Save} onClick={onRequestUpdate} isLoading={saving} className="w-full">
               Actualizar Monto
             </Button>
           </>

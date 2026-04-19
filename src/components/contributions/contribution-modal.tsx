@@ -157,7 +157,7 @@ export const ContributionModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-slate-900/32 backdrop-blur-sm" />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto p-4 md:p-8">
@@ -171,9 +171,9 @@ export const ContributionModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl transition-all">
-                <div className="bg-slate-50 px-8 py-6 border-b border-slate-100 flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-primary-600 shadow-sm">
+              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.97))] shadow-[0_24px_60px_rgba(37,99,235,0.12)] transition-all">
+                <div className="flex items-center gap-4 border-b border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm">
                     <ReceiptText size={20} />
                   </div>
                   <div>
@@ -183,7 +183,7 @@ export const ContributionModal = ({
                   </div>
                 </div>
 
-                <div className="p-8 grid gap-6 sm:grid-cols-2">
+                <div className="grid gap-6 p-8 sm:grid-cols-2">
                   <Select
                     label="Contribuyente"
                     value={form.contributorId}
@@ -224,7 +224,7 @@ export const ContributionModal = ({
                   </div>
 
                   <Input
-                    label="Monto Pagado (USD)"
+                    label="Monto a aportar (USD)"
                     type="text"
                     inputMode="decimal"
                     value={form.amount}
@@ -235,16 +235,16 @@ export const ContributionModal = ({
                   />
                   
                   {(formError || lockedReason) && (
-                    <div className="sm:col-span-2 flex items-start gap-3 p-4 rounded-xl border border-amber-200 bg-amber-50">
-                       <AlertCircle size={18} className="text-amber-600 mt-0.5 shrink-0" />
-                       <p className="text-xs font-semibold text-amber-900 leading-relaxed uppercase tracking-tighter">
+                    <div className="sm:col-span-2 flex items-start gap-3 rounded-[1.15rem] border border-amber-300 bg-amber-100/60 p-4">
+                       <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-700" />
+                       <p className="text-xs font-semibold uppercase leading-relaxed tracking-tighter text-amber-950">
                           {formError || lockedReason}
                        </p>
                     </div>
                   )}
                 </div>
 
-                <div className="bg-slate-50 px-8 py-6 flex flex-col sm:flex-row-reverse gap-3 border-t border-slate-100">
+                <div className="flex flex-col gap-3 border-t border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse">
                   <Button
                     onClick={handleSubmit}
                     isLoading={submitting}

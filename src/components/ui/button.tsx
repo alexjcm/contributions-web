@@ -24,19 +24,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const baseStyles = "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+    const baseStyles = "inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-[0.01em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
     
     const variants = {
-      primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm",
-      secondary: "bg-slate-800 text-white hover:bg-slate-900 shadow-sm",
-      outline: "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400",
-      ghost: "text-slate-700 hover:bg-slate-100",
-      danger: "bg-rose-600 text-white hover:bg-rose-700 shadow-sm",
+      primary: "border border-primary-700 bg-primary-600 text-white shadow-[0_12px_24px_rgba(37,99,235,0.26)] hover:bg-primary-700 hover:border-primary-800",
+      secondary: "border border-slate-800 bg-slate-800 text-white shadow-[0_10px_20px_rgba(30,41,59,0.18)] hover:bg-slate-900",
+      outline: "border border-[rgba(37,99,235,0.16)] bg-[rgba(255,255,255,0.92)] text-slate-700 hover:border-primary-400 hover:bg-primary-50/60",
+      ghost: "text-slate-700 hover:bg-primary-50/70",
+      danger: "border border-rose-700 bg-rose-700 text-white shadow-[0_10px_20px_rgba(190,24,93,0.16)] hover:bg-rose-800",
     };
 
     const sizes = {
       sm: "px-3 py-1.5 text-xs",
-      md: "px-4 py-2 text-sm",
+      md: "px-4 py-2.5 text-sm",
       lg: "px-6 py-3 text-base",
     };
 

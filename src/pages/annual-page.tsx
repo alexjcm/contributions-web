@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { CalendarDays, ChevronRight, Info } from "lucide-react";
+import { Info } from "lucide-react";
 
 import type { ContributionPayload } from "../components/contributions/contribution-modal";
 import { Card } from "../components/ui/card";
@@ -72,7 +72,7 @@ const getCellStyle = (state: ReturnType<typeof getContributionCellState>): strin
     case "complete":
       return "border-emerald-200 bg-emerald-50 text-emerald-700 shadow-inner shadow-emerald-100/50";
     case "overpaid":
-      return "border-indigo-200 bg-indigo-50 text-indigo-700 shadow-inner shadow-indigo-100/50";
+      return "border-blue-300 bg-blue-100/70 text-blue-800 shadow-inner shadow-blue-100/50";
     default:
       return "border-slate-300 bg-slate-50 text-slate-700";
   }
@@ -87,7 +87,7 @@ const getMutedCellStyle = (state: ReturnType<typeof getContributionCellState>): 
     case "complete":
       return "border-emerald-200 bg-emerald-50 text-emerald-800";
     case "overpaid":
-      return "border-indigo-200 bg-indigo-50 text-indigo-800";
+      return "border-blue-300 bg-blue-100/70 text-blue-800";
     default:
       return "border-slate-300 bg-slate-50 text-slate-500";
   }
@@ -214,20 +214,9 @@ export const AnnualPage = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <header>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-start lg:gap-8">
           <div>
-            <div className="flex items-baseline gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 shadow-inner">
-                <CalendarDays size={24} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Seguimiento Anual</h2>
-                <p className="text-sm text-slate-500">
-                  Control del año completo para detectar pendientes e incompletos y corregirlos rápido.
-                </p>
-                <p className="mt-1 text-xs font-medium text-slate-600">La eliminación de aportes se realiza desde Registro.</p>
-              </div>
-            </div>
+            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Seguimiento Anual</h2>
           </div>
           <YearSelect
             activeYear={activeYear}
@@ -238,16 +227,19 @@ export const AnnualPage = () => {
         </div>
       </header>
 
-      <div className="rounded-xl border border-primary-100 bg-primary-50/50 p-4 md:hidden">
+      <div className="rounded-[1.25rem] border border-primary-200 bg-[linear-gradient(180deg,rgba(219,234,254,0.74),rgba(255,255,255,0.92))] p-4 shadow-[0_14px_30px_rgba(37,99,235,0.06)] md:hidden">
         <div className="flex items-start gap-3">
-          <Info size={18} className="mt-0.5 text-primary-600" />
-          <p className="text-xs font-medium leading-relaxed text-primary-800">
+          <Info size={18} className="mt-0.5 text-primary-700" />
+          <p className="text-xs font-medium leading-relaxed text-primary-900">
             En móvil cada contribuyente se muestra en un bloque compacto con sus 12 meses. Pulsa cualquier mes para registrar o corregir rápidamente el aporte de esa celda. Si necesitas eliminarlo, usa Registro.
           </p>
         </div>
       </div>
 
-      <Card bodyClassName="p-0">
+      <Card
+        className="overflow-hidden border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,250,255,0.96))]"
+        bodyClassName="p-0"
+      >
         <div className="divide-y divide-slate-200 px-4 md:hidden">
           {contributors.map((contributor, index) => (
             <article
@@ -263,7 +255,7 @@ export const AnnualPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="rounded-2xl border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.92)] px-3 py-2 text-right shadow-[0_10px_20px_rgba(37,99,235,0.04)]">
                   <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">Total</p>
                   <p className="mt-1 text-sm font-extrabold text-slate-900">{formatCentsAsCurrency(contributor.totalPaidCents)}</p>
                 </div>
@@ -285,7 +277,7 @@ export const AnnualPage = () => {
                       key={month}
                       type="button"
                       onClick={() => openModalForCell(contributor, month)}
-                      className={`rounded-xl border px-2 py-2.5 text-center transition-all ${baseCellStyle} ${
+                      className={`rounded-xl border px-2 py-2.5 text-center shadow-[0_8px_18px_rgba(37,99,235,0.06)] transition-all ${baseCellStyle} ${
                         isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100" : ""
                       } ${
                         isInteractive ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100" : "cursor-not-allowed"
@@ -307,32 +299,32 @@ export const AnnualPage = () => {
           ))}
         </div>
 
-        <div className="hidden overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 md:block">
-          <div className="flex items-center justify-between border-b border-slate-100 bg-white px-5 py-2.5">
-            <p className="text-[13px] font-semibold text-slate-600">Seguimiento operativo del mes actual</p>
+        <div className="hidden overflow-x-auto scrollbar-thin scrollbar-thumb-[rgba(66,90,111,0.28)] md:block">
+          <div className="flex items-center justify-between border-b border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(239,246,255,0.62))] px-5 py-3">
+            <p className="text-[13px] font-semibold text-slate-700">Seguimiento operativo del mes actual</p>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+              <span className="rounded-full border border-stone-300 bg-stone-100/90 px-2.5 py-0.5 text-[11px] font-semibold text-stone-700">
                 Pendientes: {currentMonthPendingCount}
               </span>
-              <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700">
+              <span className="rounded-full border border-amber-300 bg-amber-100/70 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800">
                 Incompletos: {currentMonthIncompleteCount}
               </span>
-              <div className="h-4 w-px bg-slate-200" />
+              <div className="h-4 w-px bg-[color:var(--color-border)]" />
               <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-emerald-200 bg-emerald-50"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-emerald-300 bg-emerald-100/70"></span>
                   Completo
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-amber-200 bg-amber-50"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-amber-300 bg-amber-100/70"></span>
                   Incompleto
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-indigo-200 bg-indigo-50"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-blue-300 bg-blue-100/70"></span>
                   Excedente
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-slate-200 bg-slate-50"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-stone-300 bg-stone-100/90"></span>
                   Pendiente
                 </div>
               </div>
@@ -341,8 +333,8 @@ export const AnnualPage = () => {
 
           <table className="w-full min-w-[1000px] border-collapse text-sm">
             <thead>
-              <tr className="bg-slate-50/80">
-                <th className="sticky left-0 z-20 border-b border-r border-slate-100 bg-slate-50 px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+              <tr className="bg-[rgba(239,246,255,0.58)]">
+                <th className="sticky left-0 z-20 border-b border-r border-[color:var(--color-border)] bg-[rgba(247,250,255,0.98)] px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
                   Contribuyente
                 </th>
                 {monthList.map((month) => {
@@ -352,14 +344,14 @@ export const AnnualPage = () => {
                   return (
                     <th
                       key={month}
-                      className={`border-b border-slate-100 px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wider ${
-                        isCurrentMonth ? "bg-primary-50 text-primary-700" : "text-slate-600"
-                      } ${isFutureMonth ? "bg-slate-50/70 text-slate-500" : ""}`}
+                      className={`border-b border-[color:var(--color-border)] px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wider ${
+                        isCurrentMonth ? "bg-primary-100/70 text-primary-800" : "text-slate-600"
+                      } ${isFutureMonth ? "bg-[rgba(239,246,255,0.42)] text-slate-500" : ""}`}
                     >
                       <div className="flex flex-col items-center gap-1">
                         <span>{getMonthLabel(month)}</span>
                         {isCurrentMonth ? (
-                          <span className="rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-700">
+                          <span className="rounded-full border border-primary-200 bg-primary-50/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-800">
                             Actual
                           </span>
                         ) : null}
@@ -370,10 +362,10 @@ export const AnnualPage = () => {
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[color:var(--color-border)]">
               {contributors.map((contributor) => (
-                <tr key={contributor.contributorId} className="group transition-colors hover:bg-slate-50/30">
-                  <td className="sticky left-0 z-10 border-r border-slate-100 bg-white px-5 py-3 shadow-[2px_0_5px_rgba(0,0,0,0.02)] transition-colors group-hover:bg-slate-50/50">
+                <tr key={contributor.contributorId} className="group transition-colors hover:bg-[rgba(239,246,255,0.28)]">
+                  <td className="sticky left-0 z-10 border-r border-[color:var(--color-border)] bg-[rgba(255,255,255,0.99)] px-5 py-3 shadow-[2px_0_5px_rgba(0,0,0,0.02)] transition-colors group-hover:bg-[rgba(247,250,255,0.98)]">
                     <div className="flex items-center gap-3">
                       <div className="min-w-0">
                         <div className="truncate font-bold text-slate-900">{contributor.name}</div>
@@ -395,12 +387,12 @@ export const AnnualPage = () => {
                     return (
                       <td
                         key={month}
-                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40" : ""} ${isFutureMonth ? "bg-slate-50/50" : ""}`}
+                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40" : ""} ${isFutureMonth ? "bg-[rgba(239,246,255,0.34)]" : ""}`}
                       >
                         <button
                           type="button"
                           onClick={() => openModalForCell(contributor, month)}
-                          className={`w-full min-h-[44px] rounded-lg border px-2 py-2 text-[11px] font-extrabold transition-all ${baseCellStyle} ${
+                          className={`w-full min-h-[44px] rounded-xl border px-2 py-2 text-[11px] font-extrabold shadow-[0_8px_18px_rgba(37,99,235,0.06)] transition-all ${baseCellStyle} ${
                             isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100" : ""
                           } ${
                             isInteractive
@@ -437,21 +429,21 @@ export const AnnualPage = () => {
         </div>
       </Card>
 
-      <div className="md:hidden flex items-center gap-6 overflow-x-auto whitespace-nowrap rounded-2xl border border-slate-100 bg-white/60 p-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 shadow-sm scrollbar-hide">
+      <div className="md:hidden flex items-center gap-6 overflow-x-auto whitespace-nowrap rounded-[1.2rem] border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.92)] p-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 shadow-[0_10px_20px_rgba(37,99,235,0.05)] scrollbar-hide">
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-emerald-200 bg-emerald-50"></span>
+          <span className="h-3 w-3 rounded border border-emerald-300 bg-emerald-100/70"></span>
           Completo
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-amber-200 bg-amber-50"></span>
+          <span className="h-3 w-3 rounded border border-amber-300 bg-amber-100/70"></span>
           Incompleto
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-indigo-200 bg-indigo-50"></span>
+          <span className="h-3 w-3 rounded border border-blue-300 bg-blue-100/70"></span>
           Excedente
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-slate-200 bg-slate-50"></span>
+          <span className="h-3 w-3 rounded border border-stone-300 bg-stone-100/90"></span>
           Pendiente
         </div>
       </div>

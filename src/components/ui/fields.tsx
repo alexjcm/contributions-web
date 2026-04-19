@@ -15,7 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="text-sm font-semibold tracking-[0.01em] text-slate-700">
             {label}
           </label>
         )}
@@ -29,9 +29,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={`
-              w-full rounded-lg border border-slate-300 bg-white py-2 text-sm text-slate-900 transition-colors
+              w-full rounded-xl border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.98)] py-2.5 text-sm text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] transition-colors
               placeholder:text-slate-400
-              focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500
+              focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-400
               disabled:cursor-not-allowed disabled:opacity-50
               ${Icon ? "pl-10 pr-3" : "px-3"}
               ${error ? "border-rose-500 focus:border-rose-500 focus:ring-rose-500" : ""}
@@ -62,7 +62,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label htmlFor={selectId} className="text-sm font-medium text-slate-700">
+          <label htmlFor={selectId} className="text-sm font-semibold tracking-[0.01em] text-slate-700">
             {label}
           </label>
         )}
@@ -76,8 +76,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={`
-              w-full appearance-none rounded-lg border border-slate-300 bg-white py-2 text-sm text-slate-900 transition-colors
-              focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500
+              w-full appearance-none rounded-xl border border-[color:var(--color-border)] bg-[rgba(255,255,255,0.98)] py-2.5 text-sm text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] transition-colors
+              focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-400
               disabled:cursor-not-allowed disabled:opacity-50
               ${Icon ? "pl-10 pr-10" : "pl-3 pr-10"}
               ${error ? "border-rose-500 focus:border-rose-500 focus:ring-rose-500" : ""}

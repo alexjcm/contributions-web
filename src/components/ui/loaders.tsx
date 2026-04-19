@@ -1,7 +1,7 @@
 export const Spinner = ({ className = "h-5 w-5" }: { className?: string }) => {
   return (
     <span
-      className={`${className} inline-block animate-spin rounded-full border-2 border-slate-200 border-t-primary-600`}
+      className={`${className} inline-block animate-spin rounded-full border-2 border-primary-100 border-t-primary-700`}
       aria-hidden="true"
     />
   );
@@ -12,19 +12,18 @@ export const PageLoader = ({ label = "Cargando..." }: { label?: string }) => {
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-slate-600">
       <div className="relative flex items-center justify-center">
         <Spinner className="h-12 w-12" />
-        <div className="absolute h-6 w-6 rounded-full bg-primary-100/50 animate-pulse" />
+        <div className="absolute h-6 w-6 animate-pulse rounded-full bg-primary-100/80" />
       </div>
-      <p className="text-sm font-semibold tracking-tight uppercase opacity-80">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-700/80">{label}</p>
     </div>
   );
 };
 
 export const SectionLoader = ({ label = "Cargando datos..." }: { label?: string }) => {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white/50 backdrop-blur-sm p-5 text-sm text-slate-700 shadow-sm border-dashed">
+    <div className="flex items-center gap-4 rounded-[1.2rem] border border-primary-200 border-dashed bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(239,246,255,0.72))] p-5 text-sm text-slate-700 shadow-[0_12px_28px_rgba(37,99,235,0.06)]">
       <Spinner className="h-6 w-6" />
-      <span className="font-medium">{label}</span>
+      <span className="font-medium tracking-[0.01em]">{label}</span>
     </div>
   );
 };
-

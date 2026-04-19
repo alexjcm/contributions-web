@@ -8,7 +8,6 @@ import {
   clearSessionRecoveryAttempt,
   markSessionRecoveryAttempt,
   normalizeReturnTo,
-  SESSION_RECOVERY_QUERY_REASON,
   isSessionRecoveryReason
 } from "../lib/auth-navigation";
 import { PageLoader } from "../components/ui/loaders";
@@ -64,60 +63,61 @@ export const SignInPage = () => {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6 sm:p-8 animate-in fade-in duration-700">
-      <div className="w-full max-w-md">
-        <div className="mb-10 flex flex-col items-center text-center">
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-2xl ring-4 ring-white">
-            <ShieldCheck size={32} />
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            Plataforma <span className="text-primary-600 italic">DCM</span>
-          </h1>
-          <p className="mt-4 text-sm font-semibold tracking-widest text-slate-500 uppercase">
-            Gestión de Aportes Familiares
-          </p>
-        </div>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden p-6 sm:p-8 animate-in fade-in duration-700">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-[8%] top-[14%] h-48 w-48 rounded-full bg-[rgba(37,99,235,0.12)] blur-3xl" />
+        <div className="absolute bottom-[10%] right-[8%] h-64 w-64 rounded-full bg-[rgba(143,168,216,0.18)] blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-48 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),transparent)]" />
+      </div>
 
-        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-200/50">
+      <div className="relative w-full max-w-[420px]">
+        <div className="overflow-hidden rounded-[2rem] border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(239,246,255,0.88))] px-6 py-8 shadow-[0_26px_64px_rgba(37,99,235,0.12)] ring-1 ring-white/70 sm:min-h-[360px] sm:px-8 sm:py-9">
+          <div className="mb-8 flex flex-col items-center gap-4 text-center">
+            <div className="flex h-[4.25rem] w-[4.25rem] shrink-0 items-center justify-center rounded-[1.3rem] border border-primary-100 bg-primary-600 text-white shadow-[0_18px_36px_rgba(37,99,235,0.24)] sm:h-[4.6rem] sm:w-[4.6rem]">
+              <ShieldCheck size={28} />
+            </div>
+            <div>
+              <p className="text-[13px] font-bold uppercase tracking-[0.22em] text-primary-600 sm:text-[15px]">Plataforma DCM</p>
+              <h1 className="mt-2 text-[1.95rem] leading-[0.96] text-slate-900 sm:text-[2.5rem]">Aportes Familiares</h1>
+            </div>
+          </div>
+
           {isSessionRecovery ? (
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 animate-in slide-in-from-top-2">
-              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
-              <p className="text-sm font-bold leading-relaxed text-amber-900">
+            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-amber-300 bg-amber-100/60 p-4 animate-in slide-in-from-top-2">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-600" />
+              <p className="text-sm font-semibold leading-relaxed text-amber-950">
                 Tu sesión venció o no pudo verificarse. Ingresa de nuevo para continuar.
               </p>
             </div>
           ) : null}
 
           {error ? (
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 animate-in slide-in-from-top-2">
-              <div className="h-2 w-2 rounded-full bg-rose-500 mt-1.5 shrink-0" />
-              <p className="text-sm font-bold text-rose-800 leading-relaxed">
+            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-rose-300 bg-rose-100/70 p-4 animate-in slide-in-from-top-2">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-rose-600" />
+              <p className="text-sm font-semibold leading-relaxed text-rose-900">
                 {error.message}
               </p>
             </div>
           ) : null}
 
-          <Button
-            onClick={() => {
-              clearSessionRecoveryAttempt();
-              void loginWithRedirect({
-                appState: { returnTo },
-                authorizationParams: {
-                  audience: import.meta.env.VITE_AUTH0_AUDIENCE
-                }
-              });
-            }}
-            className="w-full h-12 text-base font-bold"
-            icon={LogIn}
-          >
-            {isSessionRecovery ? "Volver a iniciar sesión" : "Entrar al Sistema"}
-          </Button>
-
+          <div className="mt-8 pt-1">
+            <Button
+              onClick={() => {
+                clearSessionRecoveryAttempt();
+                void loginWithRedirect({
+                  appState: { returnTo },
+                  authorizationParams: {
+                    audience: import.meta.env.VITE_AUTH0_AUDIENCE
+                  }
+                });
+              }}
+              className="h-14 w-full text-base font-bold"
+              icon={LogIn}
+            >
+              {isSessionRecovery ? "Volver a iniciar sesión" : "Entrar al Sistema"}
+            </Button>
+          </div>
         </div>
-
-        <p className="mt-8 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
-          &copy; {new Date().getFullYear()} DCM
-        </p>
       </div>
     </main>
   );

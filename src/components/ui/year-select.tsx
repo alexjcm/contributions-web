@@ -33,14 +33,14 @@ export const YearSelect = ({
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-tighter text-slate-600">
+      <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-600">
         <Calendar size={14} className="text-slate-500" />
         Año
       </div>
       <Select
         value={activeYear}
         onChange={(event) => setActiveYear(Number(event.target.value))}
-        className={compact ? "h-9 min-w-[88px]" : "h-9 min-w-[100px] border-slate-200"}
+        className={compact ? "h-10 min-w-[96px]" : "h-10 min-w-[108px]"}
         aria-label="Seleccionar año"
       >
         {yearOptions.map((year) => (
