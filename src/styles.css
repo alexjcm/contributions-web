@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* Primary Scale (Blue) */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
   --color-primary-200: #bfdbfe;
@@ -11,20 +12,82 @@
   --color-primary-700: #1d4ed8;
   --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
+
+  /* Neutral Scale (Slate-based for premium feel) */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* Success Scale (Emerald) */
+  --color-success-50: #ecfdf5;
+  --color-success-100: #d1fae5;
+  --color-success-200: #a7f3d0;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-900: #064e3b;
+
+  /* Warning Scale (Amber) */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* Danger Scale (Rose) */
+  --color-danger-50: #fff1f2;
+  --color-danger-100: #ffe4e6;
+  --color-danger-200: #fecdd3;
+  --color-danger-300: #fda4af;
+  --color-danger-400: #fb7185;
+  --color-danger-500: #f43f5e;
+  --color-danger-600: #e11d48;
+  --color-danger-700: #be123c;
+  --color-danger-800: #9f1239;
+  --color-danger-900: #881337;
   
-  --color-secondary: #64748b;
+  /* Semantic Tokens */
   --color-background: #f7f9fc;
-  --color-foreground: #182131;
+  --color-foreground: #0f172a; /* neutral-900 */
   
   --color-card: #ffffff;
-  --color-border: #dce5f2;
-  --color-surface-muted: #eef4fb;
+  --color-border: #e2e8f0; /* neutral-200 */
+  --color-surface-muted: #f1f5f9; /* neutral-100 */
   --color-accent: #8fa8d8;
   --color-accent-soft: #dbe7fb;
 
+  /* Typography */
   --font-sans: "Aptos", "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman", ui-serif, serif;
+
+  /* Shadow Tokens */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-dialog: 0 24px 60px -8px rgba(37, 99, 235, 0.16);
+  --shadow-primary: 0 12px 24px -4px rgba(37, 99, 235, 0.24);
+  --shadow-card: 0 12px 30px -4px rgba(37, 99, 235, 0.08);
 }
+
+
 
 :root {
   font-family: var(--font-sans);

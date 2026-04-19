@@ -71,34 +71,35 @@ export const SignInPage = () => {
       </div>
 
       <div className="relative w-full max-w-[420px]">
-        <div className="overflow-hidden rounded-[2rem] border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(239,246,255,0.88))] px-6 py-8 shadow-[0_26px_64px_rgba(37,99,235,0.12)] ring-1 ring-white/70 sm:min-h-[360px] sm:px-8 sm:py-9">
+        <div className="overflow-hidden rounded-[2rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.995),rgba(239,246,255,0.88))] px-6 py-8 shadow-dialog ring-1 ring-white/70 sm:min-h-[360px] sm:px-8 sm:py-9">
           <div className="mb-8 flex flex-col items-center gap-4 text-center">
-            <div className="flex h-[4.25rem] w-[4.25rem] shrink-0 items-center justify-center rounded-[1.3rem] border border-primary-100 bg-primary-600 text-white shadow-[0_18px_36px_rgba(37,99,235,0.24)] sm:h-[4.6rem] sm:w-[4.6rem]">
+            <div className="flex h-[4.25rem] w-[4.25rem] shrink-0 items-center justify-center rounded-[1.3rem] border border-primary-100 bg-primary-600 text-white shadow-primary sm:h-[4.6rem] sm:w-[4.6rem]">
               <ShieldCheck size={28} />
             </div>
             <div>
               <p className="text-[13px] font-bold uppercase tracking-[0.22em] text-primary-600 sm:text-[15px]">Plataforma DCM</p>
-              <h1 className="mt-2 text-[1.95rem] leading-[0.96] text-slate-900 sm:text-[2.5rem]">Aportes Familiares</h1>
+              <h1 className="mt-2 text-[1.95rem] leading-[0.96] text-neutral-900 sm:text-[2.5rem]">Aportes Familiares</h1>
             </div>
           </div>
 
           {isSessionRecovery ? (
-            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-amber-300 bg-amber-100/60 p-4 animate-in slide-in-from-top-2">
-              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-600" />
-              <p className="text-sm font-semibold leading-relaxed text-amber-950">
+            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-warning-300 bg-warning-100/60 p-4 animate-in slide-in-from-top-2">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-warning-600" />
+              <p className="text-sm font-semibold leading-relaxed text-warning-950">
                 Tu sesión venció o no pudo verificarse. Ingresa de nuevo para continuar.
               </p>
             </div>
           ) : null}
 
           {error ? (
-            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-rose-300 bg-rose-100/70 p-4 animate-in slide-in-from-top-2">
-              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-rose-600" />
-              <p className="text-sm font-semibold leading-relaxed text-rose-900">
+            <div className="mb-6 flex items-start gap-3 rounded-[1.15rem] border border-danger-300 bg-danger-100/70 p-4 animate-in slide-in-from-top-2">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-danger-600" />
+              <p className="text-sm font-semibold leading-relaxed text-danger-900">
                 {error.message}
               </p>
             </div>
           ) : null}
+
 
           <div className="mt-8 pt-1">
             <Button

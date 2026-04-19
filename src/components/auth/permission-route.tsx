@@ -13,9 +13,10 @@ export const PermissionRoute = ({ required, children }: { required: AppPermissio
 
   if (!hasPermission(required)) {
     return (
-      <section className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm font-medium text-amber-900">
+      <section className="rounded-xl border border-warning-300 bg-warning-50 p-4 text-sm font-medium text-warning-900">
         No tienes permisos para acceder a esta sección.
       </section>
+
     );
   }
 

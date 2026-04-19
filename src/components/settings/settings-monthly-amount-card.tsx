@@ -22,7 +22,7 @@ export const SettingsMonthlyAmountCard = ({
 }: SettingsMonthlyAmountCardProps) => {
   return (
     <Card
-      className="w-full border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-[0_18px_36px_rgba(37,99,235,0.08)]"
+      className="w-full border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-card"
       bodyClassName="px-4 py-4 sm:px-6 sm:py-5"
       header={
         <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export const SettingsMonthlyAmountCard = ({
           <SectionLoader label="Cargando..." />
         ) : (
           <>
-            <p className="text-sm leading-6 text-slate-600">
+            <p className="text-sm leading-6 text-neutral-600">
               Define el monto base mensual que se utiliza como referencia para el seguimiento operativo del periodo.
             </p>
             <Input
@@ -53,5 +53,6 @@ export const SettingsMonthlyAmountCard = ({
         )}
       </div>
     </Card>
+
   );
 };

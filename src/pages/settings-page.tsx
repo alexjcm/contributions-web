@@ -27,14 +27,14 @@ export const SettingsPage = () => {
 
   if (!hasPermission(APP_PERMISSIONS.settingsWrite)) {
     return (
-      <Card className="border-rose-300 bg-rose-100/50">
-        <div className="flex items-center gap-3 text-rose-900">
+      <Card className="border-danger-300 bg-danger-100/50">
+        <div className="flex items-center gap-3 text-danger-900">
           <ShieldAlert size={20} />
           <p className="text-sm font-bold uppercase tracking-wider">Acceso Restringido</p>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-rose-800">
+        <p className="mt-2 text-sm leading-relaxed text-danger-800">
           Esta sección está reservada para administradores. Se requiere el permiso{" "}
-          <code className="rounded bg-rose-100 px-1.5 py-0.5 font-bold text-rose-900">{APP_PERMISSIONS.settingsWrite}</code> para realizar cambios en la configuración global.
+          <code className="rounded bg-danger-100 px-1.5 py-0.5 font-bold text-danger-900">{APP_PERMISSIONS.settingsWrite}</code> para realizar cambios en la configuración global.
         </p>
       </Card>
     );
@@ -45,10 +45,11 @@ export const SettingsPage = () => {
       <header>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Panel de Administración</h2>
+            <h2 className="text-2xl font-extrabold tracking-tight text-neutral-900">Panel de Administración</h2>
           </div>
         </div>
       </header>
+
 
       <SettingsDialogsController
         pendingAmountCents={pendingAmountCents}

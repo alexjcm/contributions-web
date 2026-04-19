@@ -1,17 +1,17 @@
 import type { ContributionState, ContributorStatus } from "../../types/domain";
 
 const stateStyles: Record<ContributionState, string> = {
-  pending: "border-stone-300 bg-stone-100/90 text-stone-700",
-  incomplete: "border-amber-300 bg-amber-100/70 text-amber-800",
-  complete: "border-emerald-300 bg-emerald-100/70 text-emerald-800",
-  overpaid: "border-blue-300 bg-blue-100/70 text-blue-800"
+  pending: "border-neutral-300 bg-neutral-100/90 text-neutral-700",
+  incomplete: "border-primary-300 bg-primary-100/70 text-primary-800",
+  complete: "border-success-300 bg-success-100/70 text-success-800",
+  overpaid: "border-success-400 bg-success-200/50 text-success-900 ring-1 ring-success-200/50"
 };
 
 const stateLabels: Record<ContributionState, string> = {
-  pending: "Pendiente",
-  incomplete: "Incompleto",
-  complete: "Completo",
-  overpaid: "Excedente"
+  pending: "Sin aportes",
+  incomplete: "Colaborando",
+  complete: "Meta alcanzada",
+  overpaid: "Colaborador destacado"
 };
 
 export const ContributionStateBadge = ({ state }: { state: ContributionState }) => {
@@ -29,14 +29,15 @@ export const ContributorStatusBadge = ({ status }: { status: ContributorStatus }
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
         isActive 
-          ? "border-emerald-300 bg-emerald-100/70 text-emerald-800" 
-          : "border-rose-300 bg-rose-100/70 text-rose-800"
+          ? "border-success-300 bg-success-100/70 text-success-800" 
+          : "border-danger-300 bg-danger-100/70 text-danger-800"
       }`}
     >
       {isActive ? "Activo" : "Inactivo"}
     </span>
   );
 };
+
 
 
 export const getContributionCellState = (amountCents: number, monthlyAmountCents: number): ContributionState => {

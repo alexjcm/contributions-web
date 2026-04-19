@@ -23,11 +23,13 @@ type ContributionModalProps = {
   defaultMonth: number;
   initialContribution?: Contribution | null;
   fixedContributorId?: number;
+  fixedYear?: number;
   fixedMonth?: number;
   lockedReason?: string | null;
   submitting?: boolean;
   onClose: () => void;
   onSubmit: (payload: ContributionPayload) => Promise<void>;
+  onDelete?: () => void;
 };
 
 type FormState = {
@@ -40,13 +42,13 @@ type FormState = {
 const monthOptions = Array.from({ length: 12 }, (_, index) => index + 1);
 
 const buildInitialState = (
-  params: Pick<ContributionModalProps, "initialContribution" | "defaultYear" | "defaultMonth" | "monthlyAmountCents" | "fixedContributorId" | "fixedMonth">
+  params: Pick<ContributionModalProps, "initialContribution" | "defaultYear" | "defaultMonth" | "monthlyAmountCents" | "fixedContributorId" | "fixedYear" | "fixedMonth">
 ): FormState => {
   const source = params.initialContribution;
 
   return {
     contributorId: String(params.fixedContributorId ?? source?.contributorId ?? ""),
-    year: String(source?.year ?? params.defaultYear),
+    year: String(params.fixedYear ?? source?.year ?? params.defaultYear),
     month: String(params.fixedMonth ?? source?.month ?? params.defaultMonth),
     amount: formatCentsAsInputValue(source?.amountCents ?? params.monthlyAmountCents)
   };
@@ -60,11 +62,13 @@ export const ContributionModal = ({
   defaultMonth,
   initialContribution,
   fixedContributorId,
+  fixedYear,
   fixedMonth,
   lockedReason,
   submitting = false,
   onClose,
-  onSubmit
+  onSubmit,
+  onDelete
 }: ContributionModalProps) => {
   const [form, setForm] = useState<FormState>(() =>
     buildInitialState({
@@ -90,14 +94,16 @@ export const ContributionModal = ({
         defaultMonth,
         monthlyAmountCents,
         fixedContributorId,
+        fixedYear,
         fixedMonth
       })
     );
     setFormError(null);
-  }, [open, initialContribution, defaultYear, defaultMonth, monthlyAmountCents, fixedContributorId, fixedMonth]);
+  }, [open, initialContribution, defaultYear, defaultMonth, monthlyAmountCents, fixedContributorId, fixedYear, fixedMonth]);
 
   const submitLabel = initialContribution ? "Guardar cambios" : "Registrar aporte";
   const canEditContributor = fixedContributorId === undefined;
+  const canEditYear = fixedYear === undefined;
   const canEditMonth = fixedMonth === undefined;
 
   const sortedContributors = useMemo(() => {
@@ -157,7 +163,7 @@ export const ContributionModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-slate-900/32 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-neutral-900/32 backdrop-blur-sm" />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto p-4 md:p-8">
@@ -171,13 +177,13 @@ export const ContributionModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.97))] shadow-[0_24px_60px_rgba(37,99,235,0.12)] transition-all">
-                <div className="flex items-center gap-4 border-b border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
+              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-border bg-white shadow-dialog transition-all">
+                <div className="flex items-center gap-4 border-b border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm">
                     <ReceiptText size={20} />
                   </div>
                   <div>
-                    <DialogTitle className="text-lg font-extrabold text-slate-900">
+                    <DialogTitle className="text-lg font-extrabold text-neutral-900">
                       {initialContribution ? "Edición de Aporte" : "Registro de Aporte"}
                     </DialogTitle>
                   </div>
@@ -206,7 +212,7 @@ export const ContributionModal = ({
                       max={2100}
                       value={form.year}
                       onChange={(event) => setForm((previous) => ({ ...previous, year: event.target.value }))}
-                      disabled={submitting}
+                      disabled={!canEditYear || submitting}
                     />
 
                     <Select
@@ -235,32 +241,47 @@ export const ContributionModal = ({
                   />
                   
                   {(formError || lockedReason) && (
-                    <div className="sm:col-span-2 flex items-start gap-3 rounded-[1.15rem] border border-amber-300 bg-amber-100/60 p-4">
-                       <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-700" />
-                       <p className="text-xs font-semibold uppercase leading-relaxed tracking-tighter text-amber-950">
+                    <div className="sm:col-span-2 flex items-start gap-3 rounded-[1.15rem] border border-warning-300 bg-warning-100/60 p-4">
+                       <AlertCircle size={18} className="mt-0.5 shrink-0 text-warning-700" />
+                       <p className="text-xs font-semibold uppercase leading-relaxed tracking-tighter text-warning-950">
                           {formError || lockedReason}
                        </p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse">
-                  <Button
-                    onClick={handleSubmit}
-                    isLoading={submitting}
-                    disabled={Boolean(lockedReason)}
-                    className="sm:min-w-[160px]"
-                  >
-                    {submitLabel}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={onClose}
-                    disabled={submitting}
-                  >
-                    Cancelar
-                  </Button>
+                <div className="flex flex-col gap-3 border-t border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse sm:justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row-reverse">
+                    <Button
+                      onClick={handleSubmit}
+                      isLoading={submitting}
+                      disabled={Boolean(lockedReason)}
+                      className="sm:min-w-[160px]"
+                    >
+                      {submitLabel}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={onClose}
+                      disabled={submitting}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                  {initialContribution && onDelete && (
+                    <div className="flex items-center justify-center sm:justify-start">
+                      <Button
+                        variant="ghost"
+                        onClick={onDelete}
+                        disabled={submitting || Boolean(lockedReason)}
+                        className="text-danger-600 hover:bg-danger-50 hover:text-danger-700"
+                      >
+                        Eliminar pago
+                      </Button>
+                    </div>
+                  )}
                 </div>
+
               </DialogPanel>
             </TransitionChild>
           </div>

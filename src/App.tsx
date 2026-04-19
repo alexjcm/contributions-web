@@ -12,20 +12,17 @@ const SignInPage = lazy(async () => {
   return { default: module.SignInPage };
 });
 
-const DashboardPage = lazy(async () => {
-  const module = await import("./pages/dashboard-page");
-  return { default: module.DashboardPage };
-});
-
-const AnnualPage = lazy(async () => {
-  const module = await import("./pages/annual-page");
-  return { default: module.AnnualPage };
+const SummaryPage = lazy(async () => {
+  const module = await import("./pages/summary-page");
+  return { default: module.SummaryPage };
 });
 
 const ContributionsPage = lazy(async () => {
   const module = await import("./pages/contributions-page");
   return { default: module.ContributionsPage };
 });
+
+ 
 
 const SettingsPage = lazy(async () => {
   const module = await import("./pages/settings-page");
@@ -56,8 +53,7 @@ export const App = () => {
       >
         <Route path="contributions" element={withSuspense(<ContributionsPage />)} />
         <Route index element={<Navigate to="/contributions" replace />} />
-        <Route path="dashboard" element={withSuspense(<DashboardPage />)} />
-        <Route path="annual" element={withSuspense(<AnnualPage />)} />
+        <Route path="summary" element={withSuspense(<SummaryPage />)} />
         <Route
           path="settings"
           element={

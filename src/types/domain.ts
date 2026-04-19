@@ -52,7 +52,6 @@ export type SummaryContributor = {
   status: ContributorStatus;
   totalPaidCents: number;
   expectedCents: number;
-  differenceCents: number;
   monthsComplete: number;
   monthsPendingOrIncomplete: number;
   state: ContributionState;
@@ -64,7 +63,6 @@ export type SummaryData = {
   totals: {
     collectedCents: number;
     expectedCents: number;
-    differenceCents: number;
     contributorsCount: number;
     activeContributorsCount: number;
     inactiveContributorsCount: number;

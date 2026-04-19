@@ -27,11 +27,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-[0.01em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
     
     const variants = {
-      primary: "border border-primary-700 bg-primary-600 text-white shadow-[0_12px_24px_rgba(37,99,235,0.26)] hover:bg-primary-700 hover:border-primary-800",
-      secondary: "border border-slate-800 bg-slate-800 text-white shadow-[0_10px_20px_rgba(30,41,59,0.18)] hover:bg-slate-900",
-      outline: "border border-[rgba(37,99,235,0.16)] bg-[rgba(255,255,255,0.92)] text-slate-700 hover:border-primary-400 hover:bg-primary-50/60",
-      ghost: "text-slate-700 hover:bg-primary-50/70",
-      danger: "border border-rose-700 bg-rose-700 text-white shadow-[0_10px_20px_rgba(190,24,93,0.16)] hover:bg-rose-800",
+      primary: "border border-primary-700 bg-primary-600 text-white shadow-primary hover:bg-primary-700 hover:border-primary-800",
+      secondary: "border border-neutral-800 bg-neutral-800 text-white shadow-md hover:bg-neutral-900",
+      outline: "border border-primary-100 bg-white/90 text-neutral-700 hover:border-primary-400 hover:bg-primary-50/60",
+      ghost: "text-neutral-700 hover:bg-primary-50/70",
+      danger: "border border-danger-700 bg-danger-700 text-white shadow-lg hover:bg-danger-800",
     };
 
     const sizes = {
@@ -39,6 +39,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       md: "px-4 py-2.5 text-sm",
       lg: "px-6 py-3 text-base",
     };
+
 
     return (
       <button

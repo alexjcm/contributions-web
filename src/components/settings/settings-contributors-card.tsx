@@ -20,7 +20,7 @@ export const SettingsContributorsCard = ({
 }: SettingsContributorsCardProps) => {
   return (
     <Card
-      className="border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-[0_18px_36px_rgba(37,99,235,0.08)]"
+      className="border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-card"
       header={
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
@@ -28,7 +28,7 @@ export const SettingsContributorsCard = ({
             Lista de Contribuyentes
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-primary-200 bg-[rgba(255,255,255,0.92)] px-2.5 py-1 text-[11px] font-semibold text-slate-600">
+            <span className="rounded-full border border-primary-200 bg-[rgba(255,255,255,0.92)] px-2.5 py-1 text-[11px] font-semibold text-neutral-600">
               {contributors.length} registros
             </span>
             <Button size="sm" icon={Plus} onClick={onCreateContributor}>
@@ -41,20 +41,20 @@ export const SettingsContributorsCard = ({
     >
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="border-b border-[color:var(--color-border)] bg-[rgba(239,246,255,0.62)]">
+          <thead className="border-b border-border bg-primary-50/60">
             <tr>
-              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600">Nombres</th>
-              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600">Estado</th>
-              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-slate-600">Acciones</th>
+              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-neutral-600">Nombres</th>
+              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-neutral-600">Estado</th>
+              <th className="px-6 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-neutral-600">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[color:var(--color-border)]">
+          <tbody className="divide-y divide-border">
             {contributors.map((contributor) => (
               <tr key={contributor.id} className="group transition-colors hover:bg-primary-50/50">
                 <td className="px-6 py-3.5">
                   <div>
-                    <div className="font-bold leading-tight text-slate-900">{contributor.name}</div>
-                    <div className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-slate-600">
+                    <div className="font-bold leading-tight text-neutral-900">{contributor.name}</div>
+                    <div className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-neutral-600">
                       <Mail size={10} />
                       {contributor.email ?? "Sin correo"}
                     </div>
@@ -89,5 +89,6 @@ export const SettingsContributorsCard = ({
         </table>
       </div>
     </Card>
+
   );
 };
