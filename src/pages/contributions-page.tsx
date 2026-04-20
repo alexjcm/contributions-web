@@ -51,48 +51,33 @@ const getStatePriority = (state: ReturnType<typeof getContributionCellState>): n
   }
 };
 
-const getStateLabel = (state: SummaryContributor["state"]): string => {
-  switch (state) {
-    case "pending":
-      return "Sin aportes";
-    case "incomplete":
-      return "Colaborando";
-    case "complete":
-      return "Meta alcanzada";
-    case "overpaid":
-      return "Colaborador destacado";
-    default:
-      return "Sin aportes";
-  }
-};
-
 const getCellStyle = (state: ReturnType<typeof getContributionCellState>): string => {
   switch (state) {
     case "pending":
-      return "border-neutral-300 bg-neutral-50 text-neutral-700";
+      return "border-neutral-300 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-500";
     case "incomplete":
-      return "border-primary-200 bg-primary-50 text-primary-700 shadow-inner";
+      return "border-primary-200 bg-primary-50 text-primary-700 shadow-inner dark:border-primary-800 dark:bg-primary-900/40 dark:text-primary-300";
     case "complete":
-      return "border-success-200 bg-success-50 text-success-700 shadow-inner";
+      return "border-success-200 bg-success-50 text-success-700 shadow-inner dark:border-success-800 dark:bg-success-900/40 dark:text-success-300";
     case "overpaid":
-      return "border-success-400 bg-success-100 text-success-900 shadow-inner ring-1 ring-success-200/50";
+      return "border-success-400 bg-success-100 text-success-900 shadow-inner ring-1 ring-success-200/50 dark:border-success-600 dark:bg-success-900/60 dark:text-success-200";
     default:
-      return "border-neutral-300 bg-neutral-50 text-neutral-700";
+      return "border-neutral-300 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-500";
   }
 };
 
 const getMutedCellStyle = (state: ReturnType<typeof getContributionCellState>): string => {
   switch (state) {
     case "pending":
-      return "border-neutral-300 bg-neutral-50 text-neutral-500";
+      return "border-neutral-300 bg-neutral-50 text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-neutral-600";
     case "incomplete":
-      return "border-primary-200 bg-primary-50 text-primary-800";
+      return "border-primary-200 bg-primary-50 text-primary-800 dark:border-primary-800 dark:bg-primary-900/30 dark:text-primary-400";
     case "complete":
-      return "border-success-200 bg-success-50 text-success-800";
+      return "border-success-200 bg-success-50 text-success-800 dark:border-success-800 dark:bg-success-900/30 dark:text-success-400";
     case "overpaid":
-      return "border-success-400 bg-success-100 text-success-900";
+      return "border-success-400 bg-success-100 text-success-900 dark:border-success-600 dark:bg-success-900/50 dark:text-success-300";
     default:
-      return "border-neutral-300 bg-neutral-50 text-neutral-500";
+      return "border-neutral-300 bg-neutral-50 text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-neutral-600";
   }
 };
 
@@ -131,7 +116,7 @@ export const ContributionsPage = () => {
 
   if (summary.error) {
     return (
-      <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-800 animate-in fade-in">
+      <div className="rounded-[var(--radius-alert)] border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-800 animate-in fade-in dark:border-rose-900 dark:bg-rose-950/60 dark:text-rose-300">
         No se pudo cargar el resumen anual: {summary.error}
       </div>
     );
@@ -139,7 +124,7 @@ export const ContributionsPage = () => {
 
   if (allContributions.error) {
     return (
-      <div className="rounded-xl border border-danger-200 bg-danger-50 p-4 text-sm font-medium text-danger-800 animate-in fade-in">
+      <div className="rounded-[var(--radius-alert)] border border-danger-200 bg-danger-50 p-4 text-sm font-medium text-danger-800 animate-in fade-in dark:border-danger-900 dark:bg-danger-950/60 dark:text-danger-300">
         No se pudo cargar el detalle mensual: {allContributions.error}
       </div>
     );
@@ -248,7 +233,7 @@ export const ContributionsPage = () => {
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-start lg:gap-8 w-full md:w-auto">
             <div className="flex items-center justify-between gap-4 w-full lg:w-auto">
-              <h2 className="text-2xl md:text-2xl font-extrabold tracking-tight text-neutral-900 line-clamp-1">Aportes Familiares</h2>
+              <h2 className="text-2xl md:text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100 line-clamp-1">Aportes Familiares</h2>
               <YearSelect
                 activeYear={activeYear}
                 currentBusinessYear={currentBusinessYear}
@@ -274,10 +259,10 @@ export const ContributionsPage = () => {
         </div>
       </header>
 
-      <div className="rounded-[1.25rem] border border-primary-200 bg-[linear-gradient(180deg,rgba(219,234,254,0.74),rgba(255,255,255,0.92))] p-4 shadow-[0_14px_30px_rgba(37,99,235,0.06)] md:hidden">
+      <div className="rounded-[var(--radius-dialog)] border border-primary-200 bg-[var(--gradient-loader)] p-4 shadow-[var(--shadow-info)] md:hidden dark:border-primary-900">
         <div className="flex items-start gap-3">
-          <Info size={18} className="mt-0.5 text-primary-700" />
-          <p className="text-xs font-medium leading-relaxed text-primary-900">
+          <Info size={18} className="mt-0.5 text-primary-700 dark:text-primary-400" />
+          <p className="text-xs font-medium leading-relaxed text-primary-900 dark:text-primary-200">
            Pulsa cualquier mes para registrar o corregir el aporte de esa celda.
           </p>
         </div>
@@ -287,14 +272,14 @@ export const ContributionsPage = () => {
         {visibleContributors.map((contributor) => (
           <Card
             key={contributor.contributorId}
-            className="overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow border-primary-100 bg-white"
+            className="overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow border-primary-100 bg-white dark:bg-neutral-800 dark:border-neutral-700"
             bodyClassName="p-5"
           >
-            <div className="flex items-center justify-between gap-3 border-b border-primary-50 pb-3 mb-4">
-              <p className="truncate text-[17px] font-extrabold text-neutral-900">{contributor.name}</p>
+            <div className="flex items-center justify-between gap-3 border-b border-primary-50 pb-3 mb-4 dark:border-neutral-700">
+              <p className="truncate text-[17px] font-extrabold text-neutral-900 dark:text-neutral-100">{contributor.name}</p>
               <div className="flex flex-col items-end">
                  <p className="text-[9px] font-bold uppercase tracking-widest text-neutral-400">Total Pagado</p>
-                 <p className="text-sm font-extrabold text-primary-700">{formatCentsAsCurrency(contributor.totalPaidCents)}</p>
+                 <p className="text-sm font-extrabold text-primary-700 dark:text-primary-400">{formatCentsAsCurrency(contributor.totalPaidCents)}</p>
               </div>
             </div>
 
@@ -314,10 +299,10 @@ export const ContributionsPage = () => {
                     key={month}
                     type="button"
                     onClick={() => openModalForCell(contributor, month)}
-                    className={`flex min-h-[50px] flex-col items-center justify-center rounded-[0.8rem] border px-1 py-1.5 shadow-sm transition-all ${baseCellStyle} ${
-                      isCurrentMonth ? "border-primary-400 ring-2 ring-primary-100/50" : ""
+                    className={`flex min-h-[50px] flex-col items-center justify-center rounded-[var(--radius-pill)] border px-1 py-1.5 shadow-sm transition-all ${baseCellStyle} ${
+                      isCurrentMonth ? "border-primary-400 ring-2 ring-primary-100/50 dark:border-primary-500 dark:ring-primary-900/40" : ""
                     } ${
-                      isInteractive ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100" : "cursor-not-allowed"
+                      isInteractive ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100 dark:hover:border-primary-700 dark:hover:ring-primary-900/50" : "cursor-not-allowed"
                     }`}
                     disabled={!isInteractive}
                   >
@@ -337,24 +322,23 @@ export const ContributionsPage = () => {
       </div>
 
       <Card
-        className="hidden md:block overflow-hidden border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,250,255,0.96))]"
+        className="hidden md:block overflow-hidden border-primary-200 bg-[var(--gradient-surface)] dark:border-primary-900"
         bodyClassName="p-0"
       >
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[rgba(66,90,111,0.28)]">
-          <div className="flex items-center justify-between border-b border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(239,246,255,0.62))] px-5 py-3">
-            <p className="text-[13px] font-semibold text-neutral-700">Seguimiento operativo del mes actual</p>
+          <div className="flex items-center justify-between border-b border-border bg-[var(--gradient-table-bar)] px-5 py-3">
             <div className="flex flex-wrap items-center gap-2.5">
-              <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-600">
+              <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-600 dark:text-neutral-400">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-success-300 bg-success-100/70"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-success-300 bg-success-200/90 dark:border-success-400 dark:bg-success-400 dark:shadow-[0_0_8px_rgba(34,197,94,0.4)]"></span>
                   Meta alcanzada
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-primary-300 bg-primary-100/70"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-primary-300 bg-primary-200/90 dark:border-primary-400 dark:bg-primary-400 dark:shadow-[0_0_8px_rgba(37,99,235,0.4)]"></span>
                   Colaborando
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded border border-success-400 bg-success-200/50"></span>
+                  <span className="h-2.5 w-2.5 rounded border border-success-400 bg-success-400 dark:border-success-400 dark:bg-success-400/90 dark:shadow-[0_0_8px_rgba(34,197,94,0.3)]"></span>
                   Colaborador destacado
                 </div>
               </div>
@@ -363,8 +347,8 @@ export const ContributionsPage = () => {
 
           <table className="w-full min-w-[1000px] border-collapse text-sm">
             <thead>
-              <tr className="bg-primary-50/50">
-                <th className="sticky left-0 z-20 border-b border-r border-border bg-[rgba(247,250,255,0.98)] px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-neutral-600 shadow-sm">
+              <tr className="bg-primary-50/50 dark:bg-primary-900/10">
+                <th className="sticky left-0 z-20 border-b border-r border-border bg-white px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-neutral-600 shadow-sm dark:bg-neutral-900 dark:text-neutral-400">
                   Contribuyente
                 </th>
                 {monthList.map((month) => {
@@ -375,14 +359,16 @@ export const ContributionsPage = () => {
                     <th
                       key={month}
                       className={`border-b border-border px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wider ${
-                        isCurrentMonth ? "bg-primary-100/70 text-primary-800 shadow-[inset_0_2px_0_0_#2563eb]" : "text-neutral-600"
-                      } ${isFutureMonth ? "bg-primary-50/40 text-neutral-500" : ""}`}
+                        isCurrentMonth 
+                          ? "bg-primary-100/70 text-primary-800 shadow-[inset_0_2px_0_0_#2563eb] dark:bg-primary-900/40 dark:text-primary-300 dark:shadow-[inset_0_2px_0_0_#3b82f6]" 
+                          : "text-neutral-600 dark:text-neutral-400"
+                      } ${isFutureMonth ? "bg-primary-50/40 text-neutral-500 dark:bg-neutral-950/40 dark:text-neutral-500" : ""}`}
                     >
-                      <span>{getMonthLabel(month)}</span>
+                      <span>{getMonthLabel(month).charAt(0).toUpperCase() + getMonthLabel(month).slice(1)}</span>
                     </th>
                   );
                 })}
-                <th className="border-b border-border bg-primary-50/80 px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-neutral-700 shadow-sm">
+                 <th className="border-b border-border bg-primary-50/80 px-4 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-neutral-700 shadow-sm dark:bg-neutral-900 dark:text-neutral-400">
                   Total
                 </th>
               </tr>
@@ -390,11 +376,11 @@ export const ContributionsPage = () => {
 
             <tbody className="divide-y divide-border">
               {visibleContributors.map((contributor) => (
-                <tr key={contributor.contributorId} className="group transition-colors hover:bg-primary-50/30">
-                  <td className="sticky left-0 z-10 border-r border-border bg-white px-5 py-3 shadow-sm transition-colors group-hover:bg-primary-50/10">
+                <tr key={contributor.contributorId} className="group transition-colors hover:bg-primary-50/30 dark:hover:bg-primary-900/15">
+                  <td className="sticky left-0 z-10 border-r border-border bg-white px-5 py-3 shadow-sm transition-colors group-hover:bg-primary-50/10 dark:bg-neutral-900 dark:group-hover:bg-neutral-800/60">
                     <div className="flex items-center gap-3">
                       <div className="min-w-0">
-                        <div className="truncate font-bold text-neutral-900">{contributor.name}</div>
+                        <div className="truncate font-bold text-neutral-900 dark:text-neutral-100">{contributor.name}</div>
                       </div>
                     </div>
                   </td>
@@ -412,17 +398,17 @@ export const ContributionsPage = () => {
                     return (
                       <td
                         key={month}
-                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40" : ""} ${isFutureMonth ? "bg-primary-50/30" : ""}`}
+                        className={`px-1.5 py-2.5 ${isCurrentMonth ? "bg-primary-50/40 dark:bg-primary-900/10" : ""} ${isFutureMonth ? "bg-primary-50/30 dark:bg-transparent" : ""}`}
 
                       >
                         <button
                           type="button"
                           onClick={() => openModalForCell(contributor, month)}
                           className={`w-full min-h-[44px] rounded-xl border px-2 py-2 text-[11px] font-extrabold shadow-sm transition-all ${baseCellStyle} ${
-                            isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100" : ""
+                            isCurrentMonth ? "border-primary-300 ring-2 ring-primary-100 dark:border-primary-700 dark:ring-primary-900/40" : ""
                           } ${
                             isInteractive
-                              ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100"
+                              ? "cursor-pointer hover:border-primary-300 hover:ring-2 hover:ring-primary-100 dark:hover:border-primary-700 dark:hover:ring-primary-900/50"
                               : "cursor-not-allowed"
                           }`}
                           disabled={!isInteractive}
@@ -448,7 +434,7 @@ export const ContributionsPage = () => {
                       </td>
                     );
                   })}
-                  <td className="bg-primary-50/20 px-4 py-3 text-right font-extrabold text-neutral-900 group-hover:bg-primary-50/40">
+                  <td className="bg-primary-50/20 px-4 py-3 text-right font-extrabold text-neutral-900 group-hover:bg-primary-50/40 dark:bg-primary-900/20 dark:text-neutral-100 dark:group-hover:bg-primary-900/30">
                     {formatCentsAsCurrency(contributor.totalPaidCents)}
                   </td>
                 </tr>
@@ -458,17 +444,17 @@ export const ContributionsPage = () => {
         </div>
       </Card>
 
-      <div className="md:hidden flex items-center gap-6 overflow-x-auto whitespace-nowrap rounded-[1.2rem] border border-border bg-white p-4 text-[11px] font-bold uppercase tracking-widest text-neutral-500 shadow-sm scrollbar-hide">
+      <div className="md:hidden flex items-center gap-6 overflow-x-auto whitespace-nowrap rounded-[var(--radius-pill)] border border-border bg-white p-4 text-[11px] font-bold uppercase tracking-widest text-neutral-500 shadow-sm scrollbar-hide dark:bg-neutral-800 dark:text-neutral-400">
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-success-300 bg-success-100/70"></span>
+          <span className="h-3 w-3 rounded border border-success-300 bg-success-100/70 dark:border-success-800 dark:bg-success-900/40"></span>
           Alcanzada
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-primary-300 bg-primary-100/70"></span>
+          <span className="h-3 w-3 rounded border border-primary-300 bg-primary-100/70 dark:border-primary-800 dark:bg-primary-900/40"></span>
           Colaborando
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-success-400 bg-success-200/50"></span>
+          <span className="h-3 w-3 rounded border border-success-400 bg-success-200/50 dark:border-success-700 dark:bg-success-900/60"></span>
           Colaborador destacado
         </div>
       </div>

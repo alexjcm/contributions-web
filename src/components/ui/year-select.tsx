@@ -1,5 +1,3 @@
-import { Calendar } from "lucide-react";
-
 import { Select } from "./fields";
 
 const MIN_YEAR_WITH_DATA = 2023;

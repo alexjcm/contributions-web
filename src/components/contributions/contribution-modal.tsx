@@ -177,13 +177,13 @@ export const ContributionModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-border bg-white shadow-dialog transition-all">
-                <div className="flex items-center gap-4 border-b border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm">
+              <DialogPanel className="w-full max-w-xl overflow-hidden rounded-[var(--radius-dialog)] border border-border bg-white shadow-dialog transition-all dark:bg-neutral-800">
+                <div className="flex items-center gap-4 border-b border-border bg-[var(--gradient-modal-header)] px-8 py-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm dark:border-primary-800 dark:bg-primary-900/30">
                     <ReceiptText size={20} />
                   </div>
                   <div>
-                    <DialogTitle className="text-lg font-extrabold text-neutral-900">
+                    <DialogTitle className="text-lg font-extrabold text-neutral-900 dark:text-neutral-100">
                       {initialContribution ? "Edición de Aporte" : "Registro de Aporte"}
                     </DialogTitle>
                   </div>
@@ -241,16 +241,16 @@ export const ContributionModal = ({
                   />
                   
                   {(formError || lockedReason) && (
-                    <div className="sm:col-span-2 flex items-start gap-3 rounded-[1.15rem] border border-warning-300 bg-warning-100/60 p-4">
+                    <div className="mb-6 flex items-start gap-4 rounded-[var(--radius-alert)] border border-warning-200 bg-warning-100/60 p-4 transition-all duration-300 animate-in slide-in-from-top-2 dark:border-warning-700/50 dark:bg-warning-950/40">
                        <AlertCircle size={18} className="mt-0.5 shrink-0 text-warning-700" />
-                       <p className="text-xs font-semibold uppercase leading-relaxed tracking-tighter text-warning-950">
+                       <p className="text-xs font-semibold uppercase leading-relaxed tracking-tighter text-warning-950 dark:text-warning-300">
                           {formError || lockedReason}
                        </p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse sm:justify-between">
+                <div className="flex flex-col gap-3 border-t border-border bg-[var(--gradient-modal-footer)] px-8 py-6 sm:flex-row-reverse sm:justify-between">
                   <div className="flex flex-col gap-3 sm:flex-row-reverse">
                     <Button
                       onClick={handleSubmit}

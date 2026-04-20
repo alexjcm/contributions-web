@@ -52,26 +52,28 @@ export const ConfirmModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-md overflow-hidden rounded-[1.75rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.97))] shadow-dialog transition-all">
+              <DialogPanel className="w-full max-w-md overflow-hidden rounded-[var(--radius-dialog)] border border-border bg-[var(--gradient-dialog)] shadow-dialog transition-all dark:bg-neutral-800">
                 <div className="p-8">
                   <div className="flex items-start gap-4">
                     <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-sm ${
-                      danger ? "border border-danger-300 bg-danger-100/70 text-danger-700" : "border border-primary-200 bg-primary-50/80 text-primary-700"
+                      danger 
+                        ? "border border-danger-300 bg-danger-100/70 text-danger-700 dark:border-danger-800 dark:bg-danger-900/30" 
+                        : "border border-primary-200 bg-primary-50/80 text-primary-700 dark:border-primary-800 dark:bg-primary-900/30"
                     }`}>
                       {danger ? <AlertTriangle size={24} /> : <Info size={24} />}
                     </div>
                     <div>
-                      <DialogTitle className="text-xl font-extrabold text-neutral-900 tracking-tight">
+                      <DialogTitle className="text-xl font-extrabold text-neutral-900 tracking-tight dark:text-neutral-100">
                         {title}
                       </DialogTitle>
-                      <p className="mt-2 text-sm text-neutral-500 leading-relaxed font-medium">
+                      <p className="mt-2 text-sm text-neutral-500 leading-relaxed font-medium dark:text-neutral-400">
                         {description}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse">
+                <div className="flex flex-col gap-3 border-t border-border bg-[var(--gradient-modal-footer)] px-8 py-6 sm:flex-row-reverse">
 
                   <Button
                     variant={danger ? "danger" : "primary"}

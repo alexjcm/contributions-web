@@ -3,10 +3,11 @@ import { NavLink } from "react-router";
 import { 
   PieChart, 
   CalendarDays, 
-  ReceiptText, 
   Settings2, 
   LogOut,
-  UserCircle
+  UserCircle,
+  Sun,
+  Moon
 } from "lucide-react";
 
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
@@ -14,22 +15,46 @@ import { Fragment } from "react";
 
 import { APP_PERMISSIONS } from "../../config/permissions";
 import { useAppContext } from "../../context/app-context";
+import { useTheme } from "../../hooks/use-theme";
 
 export const AppNav = () => {
   const { user, logout } = useAuth0();
   const { userEmail, hasPermission, contributionRestrictionMessage } = useAppContext();
+  const { theme, toggle } = useTheme();
   const canManageSettings = hasPermission(APP_PERMISSIONS.settingsWrite);
+  const canEditContributions = hasPermission(APP_PERMISSIONS.contributionsWrite);
+
+  const getRoleInfo = () => {
+    if (canManageSettings) {
+      return {
+        label: "🛡️ Administrador",
+        styles: "border-warning-200 bg-warning-50 text-warning-800 dark:border-warning-500/30 dark:bg-warning-500/10 dark:text-warning-300"
+      };
+    }
+    if (canEditContributions) {
+      return {
+        label: "✍️ Editor",
+        styles: "border-primary-200 bg-primary-50 text-primary-800 dark:border-primary-500/30 dark:bg-primary-500/10 dark:text-primary-300"
+      };
+    }
+    return {
+      label: "👀 Modo Lectura",
+      styles: "border-neutral-200 bg-neutral-50 text-neutral-800 dark:border-neutral-500/30 dark:bg-neutral-500/10 dark:text-neutral-400"
+    };
+  };
+
+  const role = getRoleInfo();
 
   const navLinkClass = ({ isActive }: { isActive: boolean }): string => {
-    return `flex shrink-0 items-center gap-1 px-2.5 py-2 text-[13px] font-semibold transition-all rounded-lg sm:gap-2 sm:px-3 sm:text-sm md:px-4 ${
+    return `flex min-w-0 shrink items-center justify-center gap-1 px-2 py-2 text-[12px] font-bold transition-all rounded-lg sm:justify-start sm:gap-2 sm:px-3 sm:text-sm md:px-4 ${
       isActive 
         ? "border border-primary-700 bg-primary-600 !text-white shadow-primary [&_svg]:!text-white" 
-        : "text-primary-900/84 hover:bg-primary-50 hover:text-primary-900 [&_svg]:text-primary-500"
+        : "text-primary-900/84 hover:bg-primary-50 hover:text-primary-900 [&_svg]:text-primary-500 dark:text-primary-300 dark:hover:bg-neutral-800 dark:hover:text-primary-200 dark:[&_svg]:text-primary-400"
     }`;
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(247,249,252,0.9))] backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border bg-[var(--gradient-nav-header)] backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
           <div className="flex flex-col">
@@ -38,13 +63,23 @@ export const AppNav = () => {
             </h1>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            {/* Theme toggle — placed to the left of the avatar */}
+            <button
+              onClick={toggle}
+              aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              title={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
             <Menu as="div" className="relative z-50">
-              <MenuButton className="flex items-center justify-center rounded-full border border-primary-200 bg-white p-0.5 shadow-sm transition hover:ring-4 hover:ring-primary-100 focus:outline-none">
+              <MenuButton className="flex items-center justify-center rounded-full border border-primary-200 bg-white p-0.5 shadow-sm transition hover:ring-4 hover:ring-primary-100 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:hover:ring-primary-900/40">
                 {user?.picture ? (
                   <img src={user.picture} alt={user?.name ?? "Usuario"} className="h-9 w-9 rounded-full object-cover" />
                 ) : (
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400">
                     <UserCircle size={20} />
                   </div>
                 )}
@@ -59,16 +94,16 @@ export const AppNav = () => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <MenuItems className="absolute right-0 mt-2 w-64 origin-top-right divide-y divide-border rounded-[1.25rem] border border-border bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)] ring-1 ring-black/5 focus:outline-none">
+                <MenuItems className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-64 origin-top-right divide-y divide-border rounded-[var(--radius-card)] border border-border bg-white shadow-[var(--shadow-dropdown)] ring-1 ring-black/5 focus:outline-none dark:divide-white/5 dark:bg-neutral-800 dark:border-neutral-700 dark:ring-white/5 sm:w-64">
                   <div className="px-5 py-4">
-                    <p className="truncate text-sm font-extrabold text-neutral-900">
+                    <p className="truncate text-sm font-extrabold text-neutral-900 dark:text-neutral-100">
                       {user?.name ?? "Usuario"}
                     </p>
-                    <p className="mb-2 truncate text-xs font-semibold text-neutral-500">
+                    <p className="mb-2 truncate text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                       {userEmail ?? user?.email ?? "Cargando sesión..."}
                     </p>
-                    <div className="inline-flex items-center gap-1.5 rounded-lg border border-warning-200 bg-warning-50 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-warning-800 shadow-sm">
-                      <span>{canManageSettings ? "🛡️ Administrador" : "👀 Modo Lectura"}</span>
+                    <div className={`inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[10px] font-bold uppercase tracking-widest shadow-sm ${role.styles}`}>
+                      <span>{role.label}</span>
                     </div>
                   </div>
                   <div className="p-2">
@@ -77,7 +112,7 @@ export const AppNav = () => {
                         <button
                           onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
                           className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors ${
-                            focus ? "bg-danger-50 text-danger-700" : "text-neutral-700"
+                            focus ? "bg-danger-50 text-danger-700 dark:bg-danger-900/40 dark:text-danger-400" : "text-neutral-700 dark:text-neutral-300"
                           }`}
                         >
                           <LogOut size={16} className={focus ? "text-danger-600" : "text-neutral-400 group-hover:text-danger-600"} />
@@ -92,26 +127,26 @@ export const AppNav = () => {
           </div>
         </div>
 
-        <nav className="flex items-center gap-1 overflow-x-auto pb-4 pr-4 whitespace-nowrap scrollbar-hide sm:flex-wrap sm:gap-2 sm:overflow-visible sm:pr-0 sm:whitespace-normal">
+        <nav className="grid grid-cols-3 gap-1.5 pb-4 sm:flex sm:items-center sm:gap-2 sm:pb-0">
           <NavLink to="/contributions" className={navLinkClass}>
-            <CalendarDays size={16} className="sm:h-[18px] sm:w-[18px]" />
-            Aportes
+            <CalendarDays size={16} className="shrink-0" />
+            <span>Aportes</span>
           </NavLink>
           <NavLink to="/summary" className={navLinkClass}>
-            <PieChart size={16} className="sm:h-[18px] sm:w-[18px]" />
-            Resumen
+            <PieChart size={16} className="shrink-0" />
+            <span>Resumen</span>
           </NavLink>
           {canManageSettings && (
             <NavLink to="/settings" className={navLinkClass}>
-              <Settings2 size={16} className="sm:h-[18px] sm:w-[18px]" />
-              Ajustes
+              <Settings2 size={16} className="shrink-0" />
+              <span>Ajustes</span>
             </NavLink>
           )}
         </nav>
 
         {contributionRestrictionMessage && (
           <div className="mb-4">
-            <div className="flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs font-medium text-primary-900 shadow-sm animate-in fade-in slide-in-from-top-1">
+            <div className="flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs font-medium text-primary-900 shadow-sm animate-in fade-in slide-in-from-top-1 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-200">
               <span className="flex h-1.5 w-1.5 rounded-full bg-primary-500"></span>
               {contributionRestrictionMessage}
             </div>

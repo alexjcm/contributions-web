@@ -1,6 +1,24 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <!--
+      Anti-FOUC: runs synchronously before the browser paints.
+      Reads localStorage and, if no stored preference, checks prefers-color-scheme.
+      Must NOT use defer/async — it must block rendering until the class is applied.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {
+          // localStorage may be blocked in private mode (Safari) or under strict CSP
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DCM • Gestión de Aportes Familiares</title>

@@ -27,11 +27,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center gap-2 rounded-xl font-semibold tracking-[0.01em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
     
     const variants = {
-      primary: "border border-primary-700 bg-primary-600 text-white shadow-primary hover:bg-primary-700 hover:border-primary-800",
-      secondary: "border border-neutral-800 bg-neutral-800 text-white shadow-md hover:bg-neutral-900",
-      outline: "border border-primary-100 bg-white/90 text-neutral-700 hover:border-primary-400 hover:bg-primary-50/60",
-      ghost: "text-neutral-700 hover:bg-primary-50/70",
-      danger: "border border-danger-700 bg-danger-700 text-white shadow-lg hover:bg-danger-800",
+      primary: "border border-primary-700 bg-primary-600 text-white shadow-primary hover:bg-primary-700 hover:border-primary-800 dark:bg-primary-600 dark:hover:bg-primary-500 dark:border-primary-500",
+      secondary: "border border-neutral-800 bg-neutral-800 text-white shadow-md hover:bg-neutral-900 dark:bg-neutral-800/80 dark:border-neutral-700 dark:hover:bg-neutral-700/80 dark:hover:border-neutral-600",
+      outline: "border border-primary-100 bg-white/90 text-neutral-700 hover:border-primary-400 hover:bg-primary-50/60 dark:bg-neutral-800/80 dark:text-neutral-200 dark:border-neutral-700 dark:hover:border-primary-500 dark:hover:bg-primary-900/10",
+      ghost: "text-neutral-700 hover:bg-primary-50/70 dark:text-neutral-300 dark:hover:bg-neutral-800",
+      danger: "border border-danger-700 bg-danger-700 text-white shadow-lg hover:bg-danger-800 dark:bg-danger-900/80 dark:border-danger-700 dark:text-danger-200 dark:hover:bg-danger-800",
     };
 
     const sizes = {

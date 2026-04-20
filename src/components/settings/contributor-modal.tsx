@@ -53,10 +53,10 @@ export const ContributorModal = ({
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <DialogPanel className="w-full max-w-lg overflow-hidden rounded-[1.75rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(247,250,255,0.97))] shadow-dialog transition-all">
-                <div className="border-b border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(239,246,255,0.6))] px-8 py-6">
-                  <DialogTitle className="flex items-center gap-3 text-lg font-extrabold text-neutral-900">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm">
+              <DialogPanel className="w-full max-w-lg overflow-hidden rounded-[var(--radius-dialog)] border border-border bg-[var(--gradient-dialog)] shadow-dialog transition-all dark:bg-neutral-800">
+                <div className="border-b border-border bg-[var(--gradient-modal-header)] px-8 py-6">
+                  <DialogTitle className="flex items-center gap-3 text-lg font-extrabold text-neutral-900 dark:text-neutral-100">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary-200 bg-primary-50/80 text-primary-700 shadow-sm dark:border-primary-800 dark:bg-primary-900/30">
                       <User size={18} />
                     </div>
                     {title}
@@ -81,7 +81,7 @@ export const ContributorModal = ({
                   />
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(239,246,255,0.5))] px-8 py-6 sm:flex-row-reverse">
+                <div className="flex flex-col gap-3 border-t border-border bg-[var(--gradient-modal-footer)] px-8 py-6 sm:flex-row-reverse">
 
                   <Button onClick={onSubmit} isLoading={submitting} className="sm:min-w-[170px]">
                     {submitLabel}

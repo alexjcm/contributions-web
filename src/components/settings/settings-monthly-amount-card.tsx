@@ -1,4 +1,4 @@
-import { Save, Settings } from "lucide-react";
+import { Save, Coins } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -22,12 +22,12 @@ export const SettingsMonthlyAmountCard = ({
 }: SettingsMonthlyAmountCardProps) => {
   return (
     <Card
-      className="w-full border-primary-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(239,246,255,0.76))] shadow-card"
+      className="w-full border-primary-200 bg-[var(--gradient-surface)] shadow-card dark:border-neutral-700"
       bodyClassName="px-4 py-4 sm:px-6 sm:py-5"
       header={
-        <div className="flex items-center gap-2">
-          <Settings size={18} className="text-primary-700" />
-          Configuración Global
+        <div className="flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+          <Coins size={18} className="text-primary-700 dark:text-primary-400" />
+          Monto Base Mensual (USD)
         </div>
       }
     >
@@ -36,11 +36,10 @@ export const SettingsMonthlyAmountCard = ({
           <SectionLoader label="Cargando..." />
         ) : (
           <>
-            <p className="text-sm leading-6 text-neutral-600">
-              Define el monto base mensual que se utiliza como referencia para el seguimiento operativo del periodo.
+            <p className="text-sm leading-6 text-neutral-600 dark:text-neutral-400">
+              Establece el aporte mensual sugerido para los contribuyentes.
             </p>
             <Input
-              label="Monto Base Mensual (USD)"
               type="text"
               inputMode="decimal"
               value={amountInput}
