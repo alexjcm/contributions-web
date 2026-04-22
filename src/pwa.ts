@@ -19,9 +19,9 @@ const updateSW = registerSW({
       return;
     }
 
-    updateToastId = toast.info("Nueva version disponible.", {
+    updateToastId = toast.info("Nueva versión disponible.", {
       duration: Infinity,
-      description: "Actualiza cuando te convenga. La aplicacion evita recargas automaticas para no interrumpir formularios o ediciones abiertas.",
+      description: "Actualiza cuando quieras.",
       action: {
         label: "Actualizar",
         onClick: () => {
