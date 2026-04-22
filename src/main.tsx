@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, useNavigate } from "react-router";
 
 import { App } from "./App";
-import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "./config/auth";
+import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN, IS_AUTH_CONFIG_VALID } from "./config/auth";
 import { AppContextProvider } from "./context/app-context";
 import { clearSessionRecoveryAttempt, normalizeReturnTo } from "./lib/auth-navigation";
 import "./pwa";
@@ -34,8 +34,31 @@ if (!rootElement) {
   throw new Error("Missing #root element");
 }
 
+const ConfigErrorView = () => (
+  <div style={{ 
+    display: 'flex', 
+    flexDirection: 'column',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    height: '100vh',
+    fontFamily: 'sans-serif',
+    textAlign: 'center',
+    padding: '20px'
+  }}>
+    <h1 style={{ color: '#ef4444' }}>Configuración incompleta</h1>
+    <p style={{ color: '#6b7280', maxWidth: '400px' }}>
+      La aplicación no puede iniciar porque faltan variables de entorno críticas. 
+      Por favor, verifica la configuración en el panel de administración de tu proveedor de hosting.
+    </p>
+  </div>
+);
+
 const Auth0ProviderWithNavigation = () => {
   const navigate = useNavigate();
+
+  if (!IS_AUTH_CONFIG_VALID) {
+    return <ConfigErrorView />;
+  }
 
   return (
     <Auth0Provider
