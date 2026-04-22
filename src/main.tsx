@@ -7,6 +7,7 @@ import { App } from "./App";
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from "./config/auth";
 import { AppContextProvider } from "./context/app-context";
 import { clearSessionRecoveryAttempt, normalizeReturnTo } from "./lib/auth-navigation";
+import "./pwa";
 import "./styles.css";
 
 const PRELOAD_RELOAD_WINDOW_MS = 10_000;

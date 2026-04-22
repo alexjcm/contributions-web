@@ -1,5 +1,8 @@
 export const AUTH_SESSION_ERROR_MESSAGE =
   "Tu sesión venció o no pudo verificarse. Pulsa Salir e ingresa de nuevo.";
+export const AUTH_NETWORK_ERROR_CODE = "AUTH_NETWORK_ERROR";
+export const AUTH_NETWORK_ERROR_MESSAGE =
+  "No fue posible contactar Auth0. Verifica tu conexión e inténtalo de nuevo.";
 
 export class AuthSessionError extends Error {
   readonly code: string | null;
@@ -13,6 +16,10 @@ export class AuthSessionError extends Error {
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null;
+};
+
+const hasText = (value: unknown): value is string => {
+  return typeof value === "string" && value.trim().length > 0;
 };
 
 export const getAuthErrorCode = (error: unknown): string | null => {
@@ -29,6 +36,35 @@ export const getAuthErrorCode = (error: unknown): string | null => {
   }
 
   return null;
+};
+
+export const isAuthNetworkError = (error: unknown): boolean => {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    return true;
+  }
+
+  if (!isRecord(error)) {
+    return false;
+  }
+
+  const candidates = [error.message, error.description, error.error_description, error.reason];
+
+  return candidates.some((candidate) => {
+    if (!hasText(candidate)) {
+      return false;
+    }
+
+    const normalized = candidate.trim().toLowerCase();
+
+    return [
+      "network",
+      "fetch",
+      "load failed",
+      "failed to fetch",
+      "timeout",
+      "temporarily unavailable"
+    ].some((fragment) => normalized.includes(fragment));
+  });
 };
 
 export const isAuthSessionRecoveryError = (error: unknown): boolean => {
@@ -49,6 +85,10 @@ export const isAuthSessionRecoveryError = (error: unknown): boolean => {
 };
 
 export const normalizeApiErrorDetail = (status: number, code: string, detail: string): string => {
+  if (code === AUTH_NETWORK_ERROR_CODE) {
+    return AUTH_NETWORK_ERROR_MESSAGE;
+  }
+
   if (status === 401 && code === "UNAUTHENTICATED") {
     return AUTH_SESSION_ERROR_MESSAGE;
   }

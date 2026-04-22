@@ -4,7 +4,14 @@ import { useLocation, useNavigate } from "react-router";
 
 import { AUTH0_AUDIENCE } from "../config/auth";
 import { buildSignInPath } from "../lib/auth-navigation";
-import { getAuthErrorCode, AuthSessionError, isAuthSessionRecoveryError } from "../lib/auth-session";
+import {
+  AUTH_NETWORK_ERROR_CODE,
+  AUTH_NETWORK_ERROR_MESSAGE,
+  getAuthErrorCode,
+  AuthSessionError,
+  isAuthNetworkError,
+  isAuthSessionRecoveryError
+} from "../lib/auth-session";
 import { ApiClient } from "../lib/http";
 
 let inFlightAccessTokenPromise: Promise<string | null> | null = null;
@@ -52,6 +59,10 @@ export const useApiClient = (): ApiClient => {
             if (isAuthSessionRecoveryError(error)) {
               redirectToSessionRecovery();
               throw new AuthSessionError(undefined, getAuthErrorCode(error));
+            }
+
+            if (isAuthNetworkError(error)) {
+              throw new AuthSessionError(AUTH_NETWORK_ERROR_MESSAGE, AUTH_NETWORK_ERROR_CODE);
             }
 
             throw new AuthSessionError();

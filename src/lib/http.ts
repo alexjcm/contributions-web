@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "../config/app";
 import type { ApiResponse } from "../types/api";
 import { isApiResponse } from "../types/api";
-import { AuthSessionError, normalizeApiErrorDetail } from "./auth-session";
+import { AUTH_NETWORK_ERROR_CODE, AuthSessionError, normalizeApiErrorDetail } from "./auth-session";
 
 type Primitive = string | number | boolean;
 
@@ -72,12 +72,14 @@ export class ApiClient {
       token = await this.getToken();
     } catch (error) {
       if (error instanceof AuthSessionError) {
+        const isNetworkError = error.code === AUTH_NETWORK_ERROR_CODE;
+
         return {
           ok: false,
-          status: 401,
+          status: isNetworkError ? 503 : 401,
           data: null,
           error: {
-            code: "UNAUTHENTICATED",
+            code: isNetworkError ? AUTH_NETWORK_ERROR_CODE : "UNAUTHENTICATED",
             detail: error.message
           }
         };

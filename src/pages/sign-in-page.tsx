@@ -12,11 +12,15 @@ import {
 } from "../lib/auth-navigation";
 import { PageLoader } from "../components/ui/loaders";
 import { Button } from "../components/ui/button";
+import { useOnlineStatus } from "../hooks/use-online-status";
+import { isAuthNetworkError } from "../lib/auth-session";
 
 export const SignInPage = () => {
   const { isLoading, isAuthenticated, error, loginWithRedirect } = useAuth0();
   const [searchParams] = useSearchParams();
   const [autoRedirecting, setAutoRedirecting] = useState<boolean>(false);
+  const [autoRedirectError, setAutoRedirectError] = useState<string | null>(null);
+  const isOnline = useOnlineStatus();
 
   const returnTo = useMemo(() => normalizeReturnTo(searchParams.get("returnTo")), [searchParams]);
   const reason = searchParams.get("reason");
@@ -24,7 +28,10 @@ export const SignInPage = () => {
   const canAutoRecover = isSessionRecovery && canAttemptSessionRecovery(returnTo);
 
   useEffect(() => {
-    if (!isSessionRecovery || !canAutoRecover || isLoading) {
+    setAutoRedirectError(null);
+
+    if (!isSessionRecovery || !canAutoRecover || isLoading || !isOnline) {
+      setAutoRedirecting(false);
       return;
     }
 
@@ -39,8 +46,13 @@ export const SignInPage = () => {
     }).catch((redirectError) => {
       console.warn("Auto-redirect to login failed.", redirectError);
       setAutoRedirecting(false);
+      setAutoRedirectError(
+        isAuthNetworkError(redirectError)
+          ? "No se puede recuperar la sesión sin conexión a Auth0. Verifica tu red e inténtalo de nuevo."
+          : "No fue posible redirigirte al inicio de sesión. Inténtalo nuevamente."
+      );
     });
-  }, [canAutoRecover, isLoading, isSessionRecovery, loginWithRedirect, returnTo]);
+  }, [canAutoRecover, isLoading, isOnline, isSessionRecovery, loginWithRedirect, returnTo]);
 
   useEffect(() => {
     if (!isAuthenticated || isSessionRecovery) {
@@ -86,7 +98,18 @@ export const SignInPage = () => {
             <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-alert)] border border-warning-300 bg-warning-100/60 p-4 animate-in slide-in-from-top-2 dark:border-warning-700 dark:bg-warning-950/60">
               <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-warning-600" />
               <p className="text-sm font-semibold leading-relaxed text-warning-950 dark:text-warning-300">
-                Tu sesión venció o no pudo verificarse. Ingresa de nuevo para continuar.
+                {!isOnline
+                  ? "Sin conexión: no es posible recuperar ni renovar la sesión con Auth0 hasta que vuelva la red."
+                  : "Tu sesión venció o no pudo verificarse. Ingresa de nuevo para continuar."}
+              </p>
+            </div>
+          ) : null}
+
+          {autoRedirectError ? (
+            <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-alert)] border border-danger-300 bg-danger-100/70 p-4 animate-in slide-in-from-top-2 dark:border-danger-800 dark:bg-danger-950/60">
+              <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-danger-600" />
+              <p className="text-sm font-semibold leading-relaxed text-danger-900 dark:text-danger-300">
+                {autoRedirectError}
               </p>
             </div>
           ) : null}
@@ -95,9 +118,17 @@ export const SignInPage = () => {
             <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-alert)] border border-danger-300 bg-danger-100/70 p-4 animate-in slide-in-from-top-2 dark:border-danger-800 dark:bg-danger-950/60">
               <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-danger-600" />
               <p className="text-sm font-semibold leading-relaxed text-danger-900 dark:text-danger-300">
-                {error.message}
+                {isAuthNetworkError(error)
+                  ? "No fue posible contactar Auth0. Verifica tu conexión e inténtalo de nuevo."
+                  : error.message}
               </p>
             </div>
+          ) : null}
+
+          {!isOnline ? (
+            <p className="mb-6 text-sm font-medium leading-relaxed text-neutral-600 dark:text-neutral-400">
+              La interfaz puede abrirse sin conexión, pero iniciar sesión o renovar la sesión requiere conectividad con Auth0.
+            </p>
           ) : null}
 
 
@@ -105,6 +136,11 @@ export const SignInPage = () => {
             <Button
               onClick={() => {
                 clearSessionRecoveryAttempt();
+
+                if (!isOnline) {
+                  return;
+                }
+
                 void loginWithRedirect({
                   appState: { returnTo },
                   authorizationParams: {
@@ -114,9 +150,14 @@ export const SignInPage = () => {
                 });
               }}
               className="h-14 w-full text-base font-bold"
+              disabled={!isOnline}
               icon={LogIn}
             >
-              {isSessionRecovery ? "Volver a iniciar sesión" : "Entrar al Sistema"}
+              {!isOnline
+                ? "Sin conexión para ingresar"
+                : isSessionRecovery
+                  ? "Volver a iniciar sesión"
+                  : "Entrar al Sistema"}
             </Button>
           </div>
         </div>

@@ -5,26 +5,35 @@ import {
   CalendarDays, 
   Settings2, 
   LogOut,
-  UserCircle,
+  Download,
   Sun,
-  Moon
+  Moon,
+  WifiOff
 } from "lucide-react";
 
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState, useEffect } from "react";
+import { toast } from "sonner";
 
 import { APP_PERMISSIONS } from "../../config/permissions";
 import { useAppContext } from "../../context/app-context";
+import { useOnlineStatus } from "../../hooks/use-online-status";
 import { useTheme } from "../../hooks/use-theme";
+import { BeforeInstallPromptEvent, isAppleMobileDevice, isStandaloneDisplayMode } from "../../types/pwa";
 
 export const AppNav = () => {
   const { user, logout } = useAuth0();
   const { userEmail, hasPermission, contributionRestrictionMessage } = useAppContext();
   const [imageError, setImageError] = useState(false);
+  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstallPromptOpen, setIsInstallPromptOpen] = useState(false);
+  const [isStandalone, setIsStandalone] = useState<boolean>(() => isStandaloneDisplayMode());
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : "U");
   const { theme, toggle } = useTheme();
+  const isOnline = useOnlineStatus();
   const canManageSettings = hasPermission(APP_PERMISSIONS.settingsWrite);
   const canEditContributions = hasPermission(APP_PERMISSIONS.contributionsWrite);
+  const showIosInstallHint = useMemo(() => isAppleMobileDevice() && !isStandalone, [isStandalone]);
 
   const getRoleInfo = () => {
     if (canManageSettings) {
@@ -46,6 +55,29 @@ export const AppNav = () => {
   };
 
   const role = getRoleInfo();
+  const canInstallFromPrompt = installPromptEvent !== null;
+  const showInstallAction = !isStandalone && (canInstallFromPrompt || showIosInstallHint);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPromptEvent(event as BeforeInstallPromptEvent);
+    };
+
+    const handleAppInstalled = () => {
+      setIsStandalone(true);
+      setInstallPromptEvent(null);
+      toast.success("Aplicación instalada.");
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt as EventListener);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt as EventListener);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }): string => {
     return `flex min-w-0 shrink items-center justify-center gap-1 px-2 py-2 text-[12px] font-bold transition-all rounded-lg sm:justify-start sm:gap-2 sm:px-3 sm:text-sm md:px-4 ${
@@ -53,6 +85,35 @@ export const AppNav = () => {
         ? "border border-primary-700 bg-primary-600 !text-white shadow-primary [&_svg]:!text-white" 
         : "text-primary-900/84 hover:bg-primary-50 hover:text-primary-900 [&_svg]:text-primary-500 dark:text-primary-300 dark:hover:bg-neutral-800 dark:hover:text-primary-200 dark:[&_svg]:text-primary-400"
     }`;
+  };
+
+  const handleInstallClick = async () => {
+    if (installPromptEvent) {
+      const pendingPrompt = installPromptEvent;
+
+      setIsInstallPromptOpen(true);
+      setInstallPromptEvent(null);
+
+      try {
+        await pendingPrompt.prompt();
+        const choice = await pendingPrompt.userChoice;
+
+        if (choice.outcome !== "accepted") {
+          toast.info("Puedes instalar la aplicación más tarde desde este menú.");
+        }
+      } catch (error) {
+        console.warn("Install prompt failed.", error);
+        toast.error("No fue posible iniciar la instalación.");
+      } finally {
+        setIsInstallPromptOpen(false);
+      }
+
+      return;
+    }
+
+    toast.message("Instalación en iPhone o iPad", {
+      description: "Abre esta app en Safari y usa Compartir > Añadir a pantalla de inicio."
+    });
   };
 
   return (
@@ -66,6 +127,13 @@ export const AppNav = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {!isOnline && (
+              <div className="hidden items-center gap-2 rounded-full border border-warning-300 bg-warning-50/90 px-3 py-1.5 text-xs font-bold text-warning-900 shadow-sm dark:border-warning-700 dark:bg-warning-950/70 dark:text-warning-200 md:flex">
+                <WifiOff size={14} />
+                Sin conexión
+              </div>
+            )}
+
             {/* Theme toggle — placed to the left of the avatar */}
             <button
               onClick={toggle}
@@ -117,6 +185,25 @@ export const AppNav = () => {
                     </div>
                   </div>
                   <div className="p-2">
+                    {showInstallAction && (
+                      <MenuItem>
+                        {({ focus }) => (
+                          <button
+                            onClick={() => {
+                              void handleInstallClick();
+                            }}
+                            disabled={isInstallPromptOpen}
+                            className={`group mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors ${
+                              focus ? "bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300" : "text-neutral-700 dark:text-neutral-300"
+                            }`}
+                          >
+                            <Download size={16} className={focus ? "text-primary-600" : "text-neutral-400 group-hover:text-primary-600"} />
+                            {canInstallFromPrompt ? "Instalar aplicación" : "Cómo instalarla"}
+                          </button>
+                        )}
+                      </MenuItem>
+                    )}
+
                     <MenuItem>
                       {({ focus }) => (
                         <button
@@ -159,6 +246,15 @@ export const AppNav = () => {
             <div className="flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs font-medium text-primary-900 shadow-sm animate-in fade-in slide-in-from-top-1 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-200">
               <span className="flex h-1.5 w-1.5 rounded-full bg-primary-500"></span>
               {contributionRestrictionMessage}
+            </div>
+          </div>
+        )}
+
+        {!isOnline && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2 rounded-xl border border-warning-300 bg-warning-50/90 px-3 py-2 text-xs font-medium text-warning-900 shadow-sm animate-in fade-in slide-in-from-top-1 dark:border-warning-700 dark:bg-warning-950/60 dark:text-warning-200">
+              <WifiOff size={14} className="shrink-0" />
+              Sin conexión: la interfaz sigue disponible, pero Auth0 y la API requieren red para renovar sesión, consultar datos y guardar cambios.
             </div>
           </div>
         )}
